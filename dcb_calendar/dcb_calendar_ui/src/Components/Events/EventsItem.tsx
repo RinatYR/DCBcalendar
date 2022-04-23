@@ -3,13 +3,13 @@ import React from "react";
 import style from "./EventsItem.less";
 import { IEvent, IEventDate } from "./EventsModels";
 
-interface IEventsItemProps extends Omit<IEvent, 'dateYear'>{
+interface IEventsItemProps extends Omit<IEvent, 'date' | 'id'>{
   date: IEventDate;
   status: EEventStatus;
 }
 
 export const EventsItem: React.FC<IEventsItemProps> = React.memo(
-  ({ date, photos, status, attachments, title, description, action }) => {
+  ({ date, photo, status, attachments, title, description, action_link, action_text }) => {
     const renderDate = () => (
       <div className={style.eventDate}>
         <div className={style.eventDay}>{date.day}</div>
@@ -22,15 +22,15 @@ export const EventsItem: React.FC<IEventsItemProps> = React.memo(
 
     const renderAttachments = () => (
       <div className={style.eventAttachments}>
-        {photos && (
+        {photo && (
           <img
-            className={style.eventPhoto}
-            src={status === EEventStatus.EXPECTED ? photos.bw : photos.color}
+            className={`${style.eventPhoto} ${status === EEventStatus.EXPIRED && style.eventPhotoExpired}`}
+            src={photo}
           />
         )}
         {attachments?.map((attachment) => {
           <a className={style.eventAttachmentLink} href={attachment.link}>
-            <img className={style.eventAttachmentImg} src={attachment.img} />
+            <img className={style.eventAttachmentImg} src={attachment.image} />
           </a>;
         })}
       </div>
@@ -43,7 +43,7 @@ export const EventsItem: React.FC<IEventsItemProps> = React.memo(
         <div className={style.eventBody}>
             <p className={style.eventDescription}>{description}</p>
             <h3 className={style.eventTitle}>{title}</h3>
-            {action && <a className={style.eventAction} href={action.link}>{action.text}</a>}
+            {(action_link && action_text) ?? <a className={style.eventAction} href={action_link}>{action_text}</a>}
         </div>
       </div>
     );

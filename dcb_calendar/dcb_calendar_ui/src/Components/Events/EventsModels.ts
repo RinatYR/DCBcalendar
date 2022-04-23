@@ -1,10 +1,12 @@
 export interface IEvent {
-  dateYear: string;
+  id: number;
+  action_link: string;
+  action_text: string;
   attachments: IEventAttachments[];
-  title: string;
+  date: string;
   description: string;
-  photos?: IEventPhotos;
-  action?: IEventAction;
+  photo: string;
+  title: string;
 }
 
 export interface IEventDate {
@@ -13,17 +15,8 @@ export interface IEventDate {
   dayWeek: string;
 }
 
-export interface IEventPhotos {
-  color: string;
-  bw: string;
-}
-
 export interface IEventAttachments {
-  img: string;
-  link: string;
-}
-
-export interface IEventAction {
-  text: string;
+  id: number;
+  image: string;
   link: string;
 }

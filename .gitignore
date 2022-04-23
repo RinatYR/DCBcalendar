@@ -1,5 +1,6 @@
 .*
 dcb_calendar/attachmentImage
+dcb_calendar/media
 dcb_calendar/dcb_calendar/__pycache__
 dcb_calendar/dcb_calendar/apps/events/__pycache__
 dcb_calendar/dcb_calendar/apps/events/migrations
