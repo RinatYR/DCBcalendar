@@ -1,23 +1,21 @@
-.event{
-    display: flex;
-    background: #EDEDED;
+.event-list{
+    overflow: scroll;
+    height: calc(100vh - 300px);
+    padding-top: 20px;
+    box-sizing: border-box;
 }
-
-.event-active{
-    background: #C2EBE7;
+.event-list-wrap{
+    position: relative;
 }
-
-.event-expected{
-    background: #EEF6F7;
-}
-
-.event-attachments{
-    display: flex;
-}
-
-.event-photo{
-    height: 50px;
-    width: 50px;
-    border-radius: 100%;
-    object-fit: cover;
-}
+// .event-list-wrap::after{
+//     content: '';
+//     display: block;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     z-index: 2;
+//     pointer-events: none;
+//     background: linear-gradient(0deg, #fff, rgba(255, 255, 255, 0) 4%, rgba(255, 255, 255, 0) 96%, #fff 100%);
+// }

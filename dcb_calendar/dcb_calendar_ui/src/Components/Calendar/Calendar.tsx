@@ -1,82 +1,77 @@
-import React, { useState } from "react";
+import { convertDateStringToObject, getMonthsByYear } from "@/Core/utils";
+import { IMonth } from "@/Enums/Calendar";
+import { useAppSelector } from "@/ReduxTools/hooks";
+import React, { useMemo, useState } from "react";
 import style from "./Calendar.less";
-import moment from "moment";
-import { Month } from "./Month";
+import { ICalendarHighlightInfo, MonthList } from "./MonthList";
 
-interface ICalendarProps {
-  year: number;
-  selectedMonth: number;
-  selectedDay: number;
-  highlightDayStart: number;
-  highlightDayEnd: number;
-}
+interface ICalendarProps {}
 
-interface IMonth {
-  num: number;
-  name: string;
-  dayNum: number;
-  dayOfWeekStart: number;
-  secondaryDayNum: number;
-}
+export const Calendar: React.FC<ICalendarProps> = () => {
+  const [leftMonth, setLeftMonth] = useState<number>(() => new Date().getMonth() + 1);
+  const [year, setYear] = useState<number | number[]>(() => new Date().getFullYear());
+  const visibleDates = useAppSelector((state) => state.app.visibleDates);
 
-export const Calendar: React.FC<ICalendarProps> = ({
-  year,
-  selectedMonth,
-  ...selectedInfo
-}) => {
-  moment.locale("ru");
-  const [leftMonth, setLeftMonth] = useState<number>(selectedMonth);
+  const calendarInfo: ICalendarHighlightInfo | null = useMemo(() => {
+    const highlightDateStart = convertDateStringToObject(visibleDates[0]);
+    const highlightDateEnd = convertDateStringToObject(visibleDates[visibleDates.length - 1]);
+    if (!highlightDateStart || !highlightDateEnd) return null;
 
-  const monthList = React.useMemo(() => {
-    const months: IMonth[] = [];
-    for (let i = 1; i <= 12; i++) {
-      const month = moment(`${i}/1/${year}`, "MM/D/YYYY");
-      const previousMonth = i > 1 ? i - 1 : 12;
-      const previousYear = i > 1 ? year : year - 1;
-      const secondaryDayNum = moment(
-        `${previousMonth}/${previousYear}`,
-        "MM/YYYY"
-      ).daysInMonth();
-      months.push({
-        num: i,
-        name: month.format("MMMM YYYY"),
-        dayNum: month.daysInMonth(),
-        dayOfWeekStart: +month.format("e"),
-        secondaryDayNum,
-      });
+    setYear(
+      highlightDateStart.year !== highlightDateEnd.year
+        ? [highlightDateStart.year, highlightDateEnd.year]
+        : highlightDateStart.year
+    );
+
+    return {
+      highlightDateStart,
+      highlightDateEnd,
+    };
+  }, [visibleDates]);
+
+  const monthList = useMemo<IMonth[]>(() => {
+    if (Array.isArray(year)) {
+      const months: IMonth[] = [];
+      const firstYear = year[0] as number;
+      const lastYear = year[year.length - 1] as number;
+      for (let i = firstYear; i <= lastYear; i++) {
+        months.push(...getMonthsByYear(i));
+      }
+      return months;
+    } else {
+      return getMonthsByYear(year);
     }
-    return months;
   }, [year]);
+
+  const handleMoveToLeft = (): void => {
+    setLeftMonth((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const handleMoveToRight = (): void => {
+    setLeftMonth((prev) => (prev < monthList.length - 1 ? prev + 1 : prev));
+  };
+
+  const transformStyleBody = useMemo(
+    () => ({ transform: `translate(${(leftMonth - 1) * -314}px)` }),
+    [leftMonth]
+  );
 
   return (
     <div className={style.calendar}>
-      <div onClick={() => setLeftMonth((prev) => (prev > 1 ? prev - 1 : prev))}>
-        <img src="./static/icons/left.svg" height={12} />
+      <div onClick={handleMoveToLeft}>
+        <img src="./static/img/left-arrow.svg" height={12} />
       </div>
       <div className={style.calendarTrack}>
-        <div
-          className={style.calendarBody}
-          style={{ transform: `translate(${(leftMonth - 1) * -314}px)` }}
-        >
-          {monthList.map(({ num, secondaryDayNum, ...monthProps }) => {
-            const selectedProps = selectedMonth === num ? selectedInfo : {};
-            return (
-              <Month
-                key={num}
-                {...monthProps}
-                {...selectedProps}
-                secondaryDayNum={
-                  leftMonth === num ? secondaryDayNum : undefined
-                }
-              />
-            );
-          })}
+        <div className={style.calendarBody} style={transformStyleBody}>
+          {calendarInfo ? (
+            <MonthList highlightInfo={calendarInfo} monthList={monthList} leftMonth={leftMonth} />
+          ) : (
+            <div>Загрузка</div>
+          )}
         </div>
       </div>
-      <div
-        onClick={() => setLeftMonth((prev) => (prev < 11 ? prev + 1 : prev))}
-      >
-        <img src="./static/icons/right.svg" height={12} />
+      <div onClick={handleMoveToRight}>
+        <img src="./static/img/right-arrow.svg" height={12} />
       </div>
     </div>
   );

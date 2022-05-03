@@ -8,5 +8,5 @@ from .serializers import EventSerializer
 #     serializer_class = EventSerializer
 
 class EventsAPIView(generics.ListAPIView):
-    queryset = Event.objects.all()
+    queryset = Event.objects.all().order_by('date')
     serializer_class = EventSerializer

@@ -9,12 +9,14 @@ class Event(models.Model):
     title = models.CharField('Название события', max_length=100)
     description = models.CharField('Дополнительное описание', max_length=150)
     date = models.DateTimeField('Дата')
-    photo = models.ImageField('Фото', upload_to='attachmentImage')
-    action_text = models.CharField('Текст кнопки', max_length=50)
-    action_link = models.CharField('Ссылка', max_length=2048)
+    photo = models.ImageField('Фото', upload_to='attachmentImage', blank=True)
+    action_text = models.CharField('Текст кнопки', max_length=50, blank=True)
+    action_link = models.CharField('Ссылка', max_length=2048, blank=True)
 
     def save(self, *args, **kwargs):
         instance = super(Event, self).save(*args, **kwargs)
+        if not self.photo:
+            return instance
         image = Image.open(self.photo.path)
         width, height = image.size
         if width > SIZE_FOR_RESIZE and height > SIZE_FOR_RESIZE:
