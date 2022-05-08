@@ -54,9 +54,9 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
 
   return (
     <div
-      className={`${style.event} ${
-        status === EEventStatus.ACTIVE && style.eventActive
-      }  ${status === EEventStatus.EXPECTED && style.eventExpected}`}
+      className={`${style.event} ${status === EEventStatus.ACTIVE && style.eventActive}  ${
+        status === EEventStatus.EXPECTED && style.eventExpected
+      }`}
       onClick={onClick}
       ref={setObserve}
       data-date={observeTime}

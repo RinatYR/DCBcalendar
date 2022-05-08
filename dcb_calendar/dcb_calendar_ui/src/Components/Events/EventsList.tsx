@@ -31,7 +31,7 @@ export const EventsList: React.FC = React.memo(() => {
     appDispatch(setVisibleDates(newVisibleDates));
   }, 300);
 
-  const observerCallback: IntersectionObserverCallback = (entries, obs) => {
+  const observerCallback: IntersectionObserverCallback = (entries) => {
     const newVisibleDates = { ...visibleDatesRef.current };
     entries?.length &&
       entries.forEach((elem) => {

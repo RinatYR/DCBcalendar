@@ -27,14 +27,19 @@ export const MonthList = memo<IMonthListProps>(({ highlightInfo, monthList, left
       {monthList.map(({ num, year, secondaryDayNum, ...monthProps }) => {
         const isHighlight =
           highlightDateStart.month <= num &&
-          highlightDateEnd.month >= num &&
           highlightDateStart.year <= year &&
-          highlightDateEnd.year >= year;
+          ((highlightDateEnd.month >= num && highlightDateEnd.year === year) ||
+            highlightDateEnd.year > year);
         const highlightDayProps = isHighlight
           ? {
-              highlightDayStart: highlightDateStart.month === num ? highlightDateStart.day : 1,
+              highlightDayStart:
+                highlightDateStart.month === num && highlightDateStart.year === year
+                  ? highlightDateStart.day
+                  : 1,
               highlightDayEnd:
-                highlightDateEnd.month === num ? highlightDateEnd.day : monthProps.dayNum,
+                highlightDateEnd.month === num && highlightDateEnd.year === year
+                  ? highlightDateEnd.day
+                  : monthProps.dayNum,
             }
           : {};
 
