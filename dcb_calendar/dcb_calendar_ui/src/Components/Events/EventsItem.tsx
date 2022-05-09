@@ -45,7 +45,7 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
         />
       )}
       {attachments?.map((attachment) => (
-        <a className={style.eventAttachmentLink} href={attachment.link} key={attachment.id}>
+        <a className={style.eventAttachmentLink} href={attachment.link} key={'attachment'+attachment.id}>
           <img className={style.eventAttachmentImg} src={attachment.image} />
         </a>
       ))}

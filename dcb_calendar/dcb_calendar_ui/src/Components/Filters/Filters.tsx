@@ -26,7 +26,7 @@ export const Filters: React.FC = () => {
     <ul className={style.filtersList}>
       {categoryList.map((category) => {
         return (
-          <li className={style.filtersItem} key={category.id}>
+          <li className={style.filtersItem} key={'subcategory'+category.id}>
             <label>
               <input
                 className={style.filterCheckbox}
@@ -45,7 +45,7 @@ export const Filters: React.FC = () => {
   return (
     <div className={style.filters}>
       {filtersList.map((category) => (
-        <div key={category.id}>
+        <div key={'category'+category.id}>
           <h3 className={style.filtersTitle}>{category.name}</h3>
           {renderCategories(category.subcategories)}
         </div>

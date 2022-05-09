@@ -1,9 +1,9 @@
-import { addNextEvents } from "@/ReduxTools/eventsSlice";
+import { setEvents } from "@/ReduxTools/eventsSlice";
 import { useAppDispatch } from "@/ReduxTools/hooks";
 import { getEventsListService } from "@/Services/EventsService";
 
 interface IEventsActions {
-    getEventsList: (filter: number[]) => Promise<void>;
+  getEventsList: (filter: number[]) => Promise<void>;
 }
 
 export const useEventsActions = (): IEventsActions => {
@@ -12,7 +12,7 @@ export const useEventsActions = (): IEventsActions => {
     getEventsList: (filter: number[]) =>
       eventsDispatch(async (dispatch) => {
         const eventsList = await getEventsListService(filter);
-        dispatch(addNextEvents(eventsList));
+        dispatch(setEvents(eventsList));
       }),
   };
 };

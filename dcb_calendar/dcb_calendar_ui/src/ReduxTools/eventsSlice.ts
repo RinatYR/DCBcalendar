@@ -13,14 +13,17 @@ const eventsSlice = createSlice({
   name: "events",
   initialState,
   reducers: {
-      addNextEvents(state, action: PayloadAction<IEvent[]>) {
-          state.eventsList = [...state.eventsList, ...action.payload];
-      },
-      addPrevEvents(state, action: PayloadAction<IEvent[]>) {
-          state.eventsList = [...action.payload, ...state.eventsList];
-      }
+    setEvents(state, action: PayloadAction<IEvent[]>) {
+      state.eventsList = action.payload;
+    },
+    addNextEvents(state, action: PayloadAction<IEvent[]>) {
+      state.eventsList = [...state.eventsList, ...action.payload];
+    },
+    addPrevEvents(state, action: PayloadAction<IEvent[]>) {
+      state.eventsList = [...action.payload, ...state.eventsList];
+    },
   },
 });
 
 export default eventsSlice.reducer;
-export const {addNextEvents, addPrevEvents} = eventsSlice.actions;
+export const {setEvents, addNextEvents, addPrevEvents } = eventsSlice.actions;

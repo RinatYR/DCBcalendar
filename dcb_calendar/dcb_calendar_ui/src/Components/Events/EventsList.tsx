@@ -96,7 +96,7 @@ export const EventsList: React.FC = React.memo(() => {
           {...event}
           date={eventDate}
           status={status}
-          key={id}
+          key={'event'+id}
           onClick={handleClickEvent(id, parseDate.toDateString())}
           observeTime={observeTime}
           setObserve={setObserve}
