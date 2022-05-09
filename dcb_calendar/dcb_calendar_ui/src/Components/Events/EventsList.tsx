@@ -10,6 +10,7 @@ import { debounce } from "lodash";
 
 export const EventsList: React.FC = React.memo(() => {
   const eventsList = useAppSelector((state) => state.events.eventsList);
+  const filter = useAppSelector((state) => state.filters.filter);
   const appDispatch = useAppDispatch();
   const { getEventsList } = useEventsActions();
   const [activeEvent, setActiveEvent] = useState<number>();
@@ -19,8 +20,8 @@ export const EventsList: React.FC = React.memo(() => {
   const observerFirstCall = useRef<boolean>(true);
 
   useEffect(() => {
-    getEventsList();
-  }, []);
+    getEventsList(filter);
+  }, [filter]);
 
   const handleClickEvent = (id: number, date: string) => (): void => {
     appDispatch(setSelectedDate(date));

@@ -1,5 +1,10 @@
-export const getEventsListService = async () => {
-  const eventsData = await fetch("/rest/events");
+export const getEventsListService = async (filter: number[]) => {
+  const eventsData = await fetch("/rest/events", {
+    method: "POST",
+    body: JSON.stringify({ filter }),
+  });
+  //TODO добавить кнопку повторить и вывод ошибки
+  if(eventsData.status !== 200) return [];
   const eventsList = await eventsData.json();
 
   return eventsList;

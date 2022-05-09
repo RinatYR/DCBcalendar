@@ -1,33 +1,40 @@
-import React from "react";
+import { useFiltersActions } from "@/Actions/FiltersAction";
+import { resetFilter, toggleFilter } from "@/ReduxTools/filtersSlice";
+import { useAppDispatch, useAppSelector } from "@/ReduxTools/hooks";
+import React, { useEffect } from "react";
 import style from "./Filters.less";
 
 export const Filters: React.FC = () => {
-  const directionsList = [
-    { id: "1", name: "Финансы / экономика" },
-    { id: "2", name: "Управление продуктом" },
-    { id: "3", name: "Премии" },
-    { id: "4", name: "Отрасли" },
-    { id: "5", name: "Разработка" },
-    { id: "6", name: "Дизайн" },
-    { id: "7", name: "UX" },
-  ];
-  const areasList = [
-    { id: "1", name: "Мир" },
-    { id: "2", name: "Россия" },
-    { id: "3", name: "Сбер" },
-    { id: "4", name: "КИБ" },
-    { id: "5", name: "ЦКБ" },
-    { id: "6", name: "Команды" },
-  ];
+  const filtersList = useAppSelector((state) => state.filters.filtersList);
+  const filter = useAppSelector((state) => state.filters.filter);
+  const appDispatch = useAppDispatch();
+  const { getFiltersList } = useFiltersActions();
 
-  const renderFilters = (filtersList, onChange) => (
+  useEffect(() => {
+    getFiltersList();
+  }, []);
+
+  const handleCheckFilter = (id: number) => () => {
+    appDispatch(toggleFilter(id));
+  };
+
+  const handleResetFilter = () => {
+    appDispatch(resetFilter());
+  };
+
+  const renderCategories = (categoryList) => (
     <ul className={style.filtersList}>
-      {filtersList.map((filter) => {
+      {categoryList.map((category) => {
         return (
-          <li className={style.filtersItem}>
+          <li className={style.filtersItem} key={category.id}>
             <label>
-              <input className={style.filterCheckbox} type="checkbox" onChange={onChange} />
-              <span>{filter.name}</span>
+              <input
+                className={style.filterCheckbox}
+                type="checkbox"
+                onChange={handleCheckFilter(category.id)}
+                checked={filter.includes(category.id)}
+              />
+              <span>{category.name}</span>
             </label>
           </li>
         );
@@ -37,10 +44,13 @@ export const Filters: React.FC = () => {
 
   return (
     <div className={style.filters}>
-      <h3 className={style.filtersTitle}>НАПРАВЛЕНИЯ</h3>
-      {renderFilters(directionsList, () => {})}
-      <h3 className={style.filtersTitle}>УРОВЕНЬ СОБЫТИЯ</h3>
-      {renderFilters(areasList, () => {})}
+      {filtersList.map((category) => (
+        <div key={category.id}>
+          <h3 className={style.filtersTitle}>{category.name}</h3>
+          {renderCategories(category.subcategories)}
+        </div>
+      ))}
+      <button className={style.filtersButton} onClick={handleResetFilter}>Сбросить</button>
     </div>
   );
 };
