@@ -16,45 +16,55 @@ export interface ICalendarHighlightInfo {
   highlightDateEnd: IDate;
 }
 
-export const MonthList = memo<IMonthListProps>(({ highlightInfo, monthList, leftMonth }) => {
-  if (!highlightInfo) return null;
+export const MonthList = memo<IMonthListProps>(
+  ({ highlightInfo, monthList, leftMonth }) => {
+    if (!highlightInfo) return null;
 
-  const { highlightDateStart, highlightDateEnd } = highlightInfo;
-  const selectedDate = useAppSelector((state) => convertDateStringToObject(state.app.selectedDate));
+    const { highlightDateStart, highlightDateEnd } = highlightInfo;
+    const selectedDate = useAppSelector((state) =>
+      convertDateStringToObject(state.app.selectedDate)
+    );
 
-  return (
-    <>
-      {monthList.map(({ num, year, secondaryDayNum, ...monthProps }) => {
-        const isHighlight =
-          highlightDateStart.month <= num &&
-          highlightDateStart.year <= year &&
-          ((highlightDateEnd.month >= num && highlightDateEnd.year === year) ||
-            highlightDateEnd.year > year);
-        const highlightDayProps = isHighlight
-          ? {
-              highlightDayStart:
-                highlightDateStart.month === num && highlightDateStart.year === year
-                  ? highlightDateStart.day
-                  : 1,
-              highlightDayEnd:
-                highlightDateEnd.month === num && highlightDateEnd.year === year
-                  ? highlightDateEnd.day
-                  : monthProps.dayNum,
-            }
-          : {};
+    return (
+      <>
+        {monthList.map(({ num, year, secondaryDayNum, ...monthProps }) => {
+          const isHighlight =
+            highlightDateStart.month <= num &&
+            highlightDateStart.year <= year &&
+            ((highlightDateEnd.month >= num &&
+              highlightDateEnd.year === year) ||
+              highlightDateEnd.year > year);
+          const highlightDayProps = isHighlight
+            ? {
+                highlightDayStart:
+                  highlightDateStart.month === num &&
+                  highlightDateStart.year === year
+                    ? highlightDateStart.day
+                    : 1,
+                highlightDayEnd:
+                  highlightDateEnd.month === num &&
+                  highlightDateEnd.year === year
+                    ? highlightDateEnd.day
+                    : monthProps.dayNum,
+              }
+            : {};
 
-        const isSelected = selectedDate && selectedDate.year === year && selectedDate.month === num;
+          const isSelected =
+            selectedDate &&
+            selectedDate.year === year &&
+            selectedDate.month === num;
 
-        return (
-          <Month
-            key={`${num}${year}`}
-            {...monthProps}
-            {...highlightDayProps}
-            selectedDay={isSelected ? selectedDate.day : undefined}
-            secondaryDayNum={leftMonth === num ? secondaryDayNum : undefined}
-          />
-        );
-      })}
-    </>
-  );
-});
+          return (
+            <Month
+              key={`${num}${year}`}
+              {...monthProps}
+              {...highlightDayProps}
+              selectedDay={isSelected ? selectedDate?.day : undefined}
+              secondaryDayNum={leftMonth === num ? secondaryDayNum : undefined}
+            />
+          );
+        })}
+      </>
+    );
+  }
+);

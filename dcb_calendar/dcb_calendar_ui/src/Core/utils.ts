@@ -10,7 +10,10 @@ export const getMonthsByYear = (year: number): IMonth[] => {
     const month = moment(`${i}/1/${year}`, "MM/D/YYYY");
     const previousMonth = i > 1 ? i - 1 : 12;
     const previousYear = i > 1 ? year : year - 1;
-    const secondaryDayNum = moment(`${previousMonth}/${previousYear}`, "MM/YYYY").daysInMonth();
+    const secondaryDayNum = moment(
+      `${previousMonth}/${previousYear}`,
+      "MM/YYYY"
+    ).daysInMonth();
     months.push({
       num: i,
       name: month.format("MMMM YYYY"),
@@ -23,14 +26,15 @@ export const getMonthsByYear = (year: number): IMonth[] => {
   return months;
 };
 
-export const convertDateStringToObject = memoize<(date: string | undefined) => IDate | null>(
-  (dateString: string | undefined) => {
-    if (!dateString) return null;
-    const date = new Date(dateString);
-    return {
-      day: date.getDate(),
-      month: date.getMonth() + 1,
-      year: date.getFullYear(),
-    };
-  }
-);
+export const convertDateStringToObject = memoize<
+  (date: string | undefined) => IDate | null
+>((dateString: string | undefined) => {
+  if (!dateString) return null;
+  const date = new Date(dateString);
+
+  return {
+    day: date.getDate(),
+    month: date.getMonth() + 1,
+    year: date.getFullYear(),
+  };
+});

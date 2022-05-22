@@ -1,4 +1,4 @@
-import { IBanner } from "@/Components/Banner/banner";
+import { IBanner } from "@/Components/Banner/Banner";
 import { getBannersListService } from "@/Services/BannerService";
 
 interface IBannerActions {
@@ -7,6 +7,6 @@ interface IBannerActions {
 
 export const useBannerActions = (): IBannerActions => {
   return {
-    getBannersList: () => getBannersListService()
+    getBannersList: () => getBannersListService(),
   };
 };

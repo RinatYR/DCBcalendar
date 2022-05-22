@@ -23,9 +23,12 @@ export const EventsList: React.FC = React.memo(() => {
 
   useEffect(() => {
     setIsLoading(true);
-    getEventsList(filter).finally(() => {
-      setIsLoading(false);
-    });
+    getEventsList(filter).then(
+      () => {
+        setIsLoading(false);
+      },
+      () => setIsNoEventsMore(true)
+    );
   }, [filter]);
 
   const handleClickEvent = (id: number, date: string) => (): void => {
@@ -94,7 +97,8 @@ export const EventsList: React.FC = React.memo(() => {
         month: month < 10 ? "0" + month : month.toString(),
         dayWeek,
       };
-      const observeTime = `${parseDate.getFullYear()}.${eventDate.month}.${eventDate.day}`;
+
+      const observeTime = parseDate.toISOString();
 
       return (
         <EventsItem
@@ -116,7 +120,9 @@ export const EventsList: React.FC = React.memo(() => {
         {renderList()}
         <div className={style.eventListGetMore}>
           {isLoading && <div className={style.eventListLoader}>Загрузка</div>}
-          {isNoEventsMore && <div className={style.eventListEmpty}>Событий больше нет</div>}
+          {isNoEventsMore && (
+            <div className={style.eventListEmpty}>Событий больше нет</div>
+          )}
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { EventsList } from "./Components/Events/EventsList";
 import { Header } from "./Components/Header/Header";
 import style from "./App.less";
 import { Filters } from "./Components/Filters/Filters";
-import { Banner } from "./Components/Banner/banner";
+import { Banner } from "./Components/Banner/Banner";
 
 export const App: React.FC = () => {
   moment.locale("ru");
