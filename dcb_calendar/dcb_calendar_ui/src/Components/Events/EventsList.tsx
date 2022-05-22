@@ -14,13 +14,18 @@ export const EventsList: React.FC = React.memo(() => {
   const appDispatch = useAppDispatch();
   const { getEventsList } = useEventsActions();
   const [activeEvent, setActiveEvent] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isNoEventsMore, setIsNoEventsMore] = useState<boolean>(false);
   const scrollRef = useRef(null);
   const observer = useRef<IntersectionObserver>();
   const visibleDatesRef = useRef<Record<string, number>>();
   const observerFirstCall = useRef<boolean>(true);
 
   useEffect(() => {
-    getEventsList(filter);
+    setIsLoading(true);
+    getEventsList(filter).finally(() => {
+      setIsLoading(false);
+    });
   }, [filter]);
 
   const handleClickEvent = (id: number, date: string) => (): void => {
@@ -96,7 +101,7 @@ export const EventsList: React.FC = React.memo(() => {
           {...event}
           date={eventDate}
           status={status}
-          key={'event'+id}
+          key={"event" + id}
           onClick={handleClickEvent(id, parseDate.toDateString())}
           observeTime={observeTime}
           setObserve={setObserve}
@@ -109,7 +114,10 @@ export const EventsList: React.FC = React.memo(() => {
     <div className={style.eventListWrap}>
       <div className={style.eventList} ref={scrollRef.current}>
         {renderList()}
-        <div>Событий больше нет</div>
+        <div className={style.eventListGetMore}>
+          {isLoading && <div className={style.eventListLoader}>Загрузка</div>}
+          {isNoEventsMore && <div className={style.eventListEmpty}>Событий больше нет</div>}
+        </div>
       </div>
     </div>
   );

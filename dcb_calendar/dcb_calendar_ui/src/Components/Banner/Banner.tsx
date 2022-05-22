@@ -1,23 +1,40 @@
-import React from "react";
+import { useBannerActions } from "@/Actions/BannerAction";
+import React, { useEffect, useState } from "react";
 import style from "./Banner.less";
 
+export interface IBanner {
+  id: number;
+  action_link: string;
+  action_text: string;
+  description: string;
+  image: string;
+  title: string;
+}
+
 export const Banner: React.FC = () => {
-  const mainEvent = {
-    image: "https://w-dog.ru/wallpapers/10/18/464728990985141/priroda-gory-kamni-les.jpg",
-    title: "Лидер трайба рекомендует",
-    desciption: "Бизнес-конференция 2022",
-    actionText: "Перейти",
-    actionLink: "yandex.ru",
+  const { getBannersList } = useBannerActions();
+  const [banner, setBanner] = useState<IBanner>();
+
+  const getBanner = async () => {
+    const bannersList = await getBannersList();
+    if (Array.isArray(bannersList) && bannersList[0]) {
+      setBanner(bannersList[0]);
+    }
   };
 
+  useEffect(() => {
+    getBanner();
+  }, []);
+
+  if (!banner) return null;
   return (
     <div className={style.banner}>
-      <img className={style.bannerImage} src={mainEvent.image} />
+      <img className={style.bannerImage} src={banner.image} />
       <div className={style.bannerInfo}>
-        <h2 className={style.bannerTitle}>{mainEvent.title}</h2>
-        <p className={style.bannerDescription}>{mainEvent.desciption}</p>
-        <a className={style.bannerButton} href={mainEvent.actionLink}>
-          {mainEvent.actionText}
+        <h2 className={style.bannerTitle}>{banner.title}</h2>
+        <p className={style.bannerDescription}>{banner.description}</p>
+        <a className={style.bannerButton} href={banner.action_link}>
+          {banner.action_text}
         </a>
       </div>
     </div>

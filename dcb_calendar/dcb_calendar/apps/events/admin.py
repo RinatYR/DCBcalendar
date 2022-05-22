@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Event, Attachment, PersonPhoto, Subcategory
+from .models import Category, Event, Attachment, Mainevent, PersonPhoto, Subcategory
 
 
 class AttachmentAdmin(admin.ModelAdmin):
@@ -30,4 +30,4 @@ class EventAdmin(admin.ModelAdmin):
 
 admin.site.register(Attachment, AttachmentAdmin)
 admin.site.register(Event, EventAdmin)
-admin.site.register([Category, Subcategory])
+admin.site.register([Category, Subcategory, Mainevent])

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Event, Attachment, PersonPhoto, Subcategory
+from .models import Category, Event, Attachment, Mainevent, PersonPhoto, Subcategory
 
 
 class PersonPhotoSerializer(serializers.ModelSerializer):
@@ -34,4 +34,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
+        fields = "__all__"
+
+
+class MainEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mainevent
         fields = "__all__"

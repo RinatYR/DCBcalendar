@@ -1,11 +1,28 @@
-.event-list{
-    overflow: scroll;
-    max-height: calc(100vh - 460px);
-    padding-top: 20px;
-    box-sizing: border-box;
+.event-list {
+  overflow: scroll;
+  max-height: calc(100vh - 460px);
+  padding-top: 20px;
+  box-sizing: border-box;
 }
-.event-list-wrap{
-    position: relative;
+
+.event-list-wrap {
+  position: relative;
+}
+
+.event-list-get-more {
+  display: flex;
+  justify-content: center;
+}
+
+.event-list-empty {
+    background: #EDEDED;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-weight: 400;
+    font-size: 15px;
+    text-align: center;
+    color: #333;
+    border: none;
 }
 // .event-list-wrap::after{
 //     content: '';

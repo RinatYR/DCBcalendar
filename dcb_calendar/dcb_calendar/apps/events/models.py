@@ -4,6 +4,21 @@ from .utils import imageResize
 from django.db.models.signals import post_delete, pre_save
 
 
+class Mainevent(models.Model):
+    image = models.ImageField('Фото', upload_to='attachmentImage')
+    title = models.CharField('Название события', max_length=100)
+    description = models.CharField('Дополнительное описание', max_length=150)
+    action_text = models.CharField('Текст кнопки', max_length=50, blank=True)
+    action_link = models.CharField('Ссылка', max_length=2048, blank=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'главное событие'
+        verbose_name_plural = 'главные события'
+
+
 class Category(models.Model):
     name = models.CharField('Название категории', max_length=100)
 
@@ -112,3 +127,5 @@ post_delete.connect(post_save_image, sender=PersonPhoto)
 pre_save.connect(pre_save_image, sender=PersonPhoto)
 post_delete.connect(post_save_image, sender=Attachment)
 pre_save.connect(pre_save_image, sender=Attachment)
+post_delete.connect(post_save_image, sender=Mainevent)
+pre_save.connect(pre_save_image, sender=Mainevent)
