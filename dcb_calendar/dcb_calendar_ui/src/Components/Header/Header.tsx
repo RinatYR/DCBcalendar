@@ -1,12 +1,18 @@
 import React from "react";
+import { Search } from "../Search/Search";
 import style from "./Header.less";
 
 export const Header: React.FC = () => {
   return (
     <header className={style.header}>
-      <h1 className={style.headerTitle}>Календарь мероприятий</h1>
-      <div className={style.headerYear}>2022</div>
-      <button className={style.headerButton}>Предложить событие</button>
+      <a href="#" className="headerLogo">
+        <img src="./static/img/logo.svg" alt="logo" className="headerLogoImg" />
+      </a>
+      <Search />
+      <div className={style.headerButtons}>
+        <button className={style.headerButtonWhite}>Участвовать в премии</button>
+        <button className={style.headerButton}>Стать спикером</button>
+      </div>
     </header>
   );
 };

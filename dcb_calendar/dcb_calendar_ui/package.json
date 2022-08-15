@@ -20,11 +20,6 @@
     "prettier:pre-commit": "prettier --write",
     "tsc": "tsc --noEmit"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "author": "Rinat Iunusov",
   "license": "ISC",
   "dependencies": {

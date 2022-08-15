@@ -2,10 +2,8 @@ export interface IEvent {
   id: number;
   action_link: string;
   action_text: string;
-  attachments: IEventAttachments[];
   date: string;
   description: string;
-  photo: string;
   title: string;
 }
 
@@ -19,4 +17,10 @@ export interface IEventAttachments {
   id: number;
   image: string;
   link: string;
+}
+
+export interface IEventPhoto {
+  id: number;
+  image: string;
+  event: number;
 }

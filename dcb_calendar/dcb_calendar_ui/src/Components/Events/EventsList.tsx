@@ -1,26 +1,48 @@
 import { useEventsActions } from "@/Actions/EventsAction";
 import { EEventStatus } from "@/Enums/Events";
-import { setSelectedDate, setVisibleDates } from "@/ReduxTools/appSlice";
 import { useAppDispatch, useAppSelector } from "@/ReduxTools/hooks";
 import React, { useEffect, useRef, useState } from "react";
 import { EventsItem } from "./EventsItem";
 import style from "./EventsList.less";
 import { IEventDate } from "./EventsModels";
-import { debounce } from "lodash";
 
-export const EventsList: React.FC = React.memo(() => {
+const monthList = [
+  "января",
+  "февраля",
+  "марта",
+  "апреля",
+  "мая",
+  "июня",
+  "июля",
+  "августа",
+  "сентября",
+  "октября",
+  "ноября",
+  "декабря",
+];
+
+/**
+ * Event list component
+ */
+export const EventsList: React.FC = () => {
+  /** Event list state */
   const eventsList = useAppSelector((state) => state.events.eventsList);
+  /** Filter state */
   const filter = useAppSelector((state) => state.filters.filter);
+  /** Dispatch from redux */
   const appDispatch = useAppDispatch();
+  /** Event list Actions */
   const { getEventsList } = useEventsActions();
+  /** Highlight event state */
   const [activeEvent, setActiveEvent] = useState<number>();
+  /** Download flag */
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  /** No events flag */
   const [isNoEventsMore, setIsNoEventsMore] = useState<boolean>(false);
+  /** Ref for scroll container */
   const scrollRef = useRef(null);
-  const observer = useRef<IntersectionObserver>();
-  const visibleDatesRef = useRef<Record<string, number>>();
-  const observerFirstCall = useRef<boolean>(true);
 
+  /** Get events when filter changed */
   useEffect(() => {
     setIsLoading(true);
     getEventsList(filter).then(
@@ -31,53 +53,9 @@ export const EventsList: React.FC = React.memo(() => {
     );
   }, [filter]);
 
-  const handleClickEvent = (id: number, date: string) => (): void => {
-    appDispatch(setSelectedDate(date));
-    setActiveEvent(id);
-  };
-
-  const updateVisibleDates = debounce((newVisibleDates: string[]) => {
-    appDispatch(setVisibleDates(newVisibleDates));
-  }, 300);
-
-  const observerCallback: IntersectionObserverCallback = (entries) => {
-    const newVisibleDates = { ...visibleDatesRef.current };
-    entries?.length &&
-      entries.forEach((elem) => {
-        const date = elem.target.attributes["data-date"].value;
-        let dateAmount = newVisibleDates[date] || 0;
-        if (observerFirstCall.current) {
-          dateAmount = elem.isIntersecting ? dateAmount + 1 : dateAmount;
-        } else {
-          dateAmount = elem.isIntersecting ? dateAmount + 1 : dateAmount - 1;
-        }
-        newVisibleDates[date] = dateAmount;
-        if (dateAmount <= 0) delete newVisibleDates[date];
-      });
-    observerFirstCall.current = false;
-    visibleDatesRef.current = newVisibleDates;
-
-    updateVisibleDates(Object.keys(newVisibleDates).sort());
-  };
-
-  const getObserver = (): IntersectionObserver => {
-    const options = {
-      root: scrollRef.current,
-      rootMargin: "0px",
-      threshold: 0,
-    };
-
-    return new IntersectionObserver(observerCallback, options);
-  };
-
-  const setObserve = (elem: HTMLElement | null) => {
-    elem && observer.current?.observe(elem);
-  };
-
   const renderList = () => {
     let isExpected = false;
-    if (!observer.current) observer.current = getObserver();
-    const weekFormater = Intl.DateTimeFormat("ru-RU", { weekday: "short" });
+    const weekFormater = Intl.DateTimeFormat("ru-RU", { weekday: "long" });
 
     return eventsList.map(({ date, id, ...event }) => {
       const parseDate = new Date(date);
@@ -90,11 +68,11 @@ export const EventsList: React.FC = React.memo(() => {
       status = activeEvent === id ? EEventStatus.ACTIVE : status;
 
       const day = parseDate.getDate();
-      const month = parseDate.getMonth() + 1;
+      const month = monthList[parseDate.getMonth()] || '';
       const dayWeek = weekFormater.format(parseDate);
       const eventDate: IEventDate = {
-        day: day < 10 ? "0" + day : day.toString(),
-        month: month < 10 ? "0" + month : month.toString(),
+        day: day.toString(),
+        month: month,
         dayWeek,
       };
 
@@ -106,9 +84,7 @@ export const EventsList: React.FC = React.memo(() => {
           date={eventDate}
           status={status}
           key={"event" + id}
-          onClick={handleClickEvent(id, parseDate.toDateString())}
           observeTime={observeTime}
-          setObserve={setObserve}
         />
       );
     });
@@ -120,11 +96,9 @@ export const EventsList: React.FC = React.memo(() => {
         {renderList()}
         <div className={style.eventListGetMore}>
           {isLoading && <div className={style.eventListLoader}>Загрузка</div>}
-          {isNoEventsMore && (
-            <div className={style.eventListEmpty}>Событий больше нет</div>
-          )}
+          {isNoEventsMore && <div className={style.eventListEmpty}>Событий больше нет</div>}
         </div>
       </div>
     </div>
   );
-});
+};
