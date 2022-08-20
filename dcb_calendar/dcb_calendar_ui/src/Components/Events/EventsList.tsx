@@ -1,5 +1,7 @@
 import { useEventsActions } from "@/Actions/EventsAction";
+import { usePrevState } from "@/Core/hooks";
 import { EEventStatus } from "@/Enums/Events";
+import { setSelectedDate, setVisibleDates } from "@/ReduxTools/appSlice";
 import { useAppDispatch, useAppSelector } from "@/ReduxTools/hooks";
 import React, { useEffect, useRef, useState } from "react";
 import { EventsItem } from "./EventsItem";
@@ -29,6 +31,10 @@ export const EventsList: React.FC = () => {
   const eventsList = useAppSelector((state) => state.events.eventsList);
   /** Filter state */
   const filter = useAppSelector((state) => state.filters.filter);
+  /** Selected date state */
+  const selectedDate = useAppSelector((state) => state.app.selectedDate);
+  /** Use previous state for selectedDate */
+  const prevSelectedDate = usePrevState(selectedDate);
   /** Dispatch from redux */
   const appDispatch = useAppDispatch();
   /** Event list Actions */
@@ -53,6 +59,13 @@ export const EventsList: React.FC = () => {
     );
   }, [filter]);
 
+  /** Scroll to event when selected day changed */
+  useEffect(() => {
+    if(selectedDate !== prevSelectedDate) {
+      //Find element and scroll to it
+    }
+  }, [selectedDate]);
+
   const renderList = () => {
     let isExpected = false;
     const weekFormater = Intl.DateTimeFormat("ru-RU", { weekday: "long" });
@@ -68,7 +81,7 @@ export const EventsList: React.FC = () => {
       status = activeEvent === id ? EEventStatus.ACTIVE : status;
 
       const day = parseDate.getDate();
-      const month = monthList[parseDate.getMonth()] || '';
+      const month = monthList[parseDate.getMonth()] || "";
       const dayWeek = weekFormater.format(parseDate);
       const eventDate: IEventDate = {
         day: day.toString(),

@@ -1,7 +1,7 @@
 from django.db import models
-from PIL import Image
-from .utils import imageResize
-from django.db.models.signals import post_delete, pre_save
+# from PIL import Image
+# from .utils import imageResize
+# from django.db.models.signals import post_delete, pre_save
 
 
 class Mainevent(models.Model):
@@ -46,11 +46,14 @@ class Subcategory(models.Model):
 
 
 class Event(models.Model):
-    title = models.CharField('Название события', max_length=100)
-    description = models.CharField('Дополнительное описание', max_length=150)
+    title = models.CharField('Название события', max_length=128)
+    description = models.CharField('Дополнительное описание', max_length=128)
     date = models.DateTimeField('Дата')
-    action_text = models.CharField('Текст кнопки', max_length=50, blank=True)
-    action_link = models.CharField('Ссылка', max_length=2048, blank=True)
+    date_end = models.DateField('Дата окончания (при необходимости)', blank=True, null=True)
+    place = models.CharField('Место проведения', max_length=128, default='Москва', blank=True)
+    format = models.CharField('Формат проведения', max_length=128, default='Онлайн',blank=True)
+    # action_text = models.CharField('Текст кнопки', max_length=50, blank=True)
+    link = models.CharField('Ссылка', max_length=2048, blank=True)
     category = models.ManyToManyField(Subcategory, verbose_name='Фильтр')
 
     def __str__(self):
@@ -61,71 +64,83 @@ class Event(models.Model):
         verbose_name_plural = 'события'
 
 
-class PersonPhoto(models.Model):
-    image = models.ImageField('Фото', upload_to='attachmentImage')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE,
-                              related_name='photos', default=None, blank=True, null=True)
-
-    def save(self, *args, **kwargs):
-        instance = super(PersonPhoto, self).save(*args, **kwargs)
-        if not self.image:
-            return instance
-        resizedImage = imageResize(Image.open(self.image.path), 50)
-        resizedImage.save(self.image.path, quality=80, optimize=True)
-
-        return instance
-
-    class Meta:
-        verbose_name = 'фото участника'
-        verbose_name_plural = 'фото участников'
-
-
-class Attachment(models.Model):
-    image = models.ImageField('Иконка', upload_to='attachmentImage')
+class Links(models.Model):
+    text = models.CharField('Текст ссылки', max_length=128)
     link = models.CharField('Ссылка', max_length=2048)
     event = models.ForeignKey(Event, on_delete=models.CASCADE,
-                              related_name='attachments', default=None, blank=True, null=True)
-
-    def save(self, *args, **kwargs):
-        instance = super(Attachment, self).save(*args, **kwargs)
-        if not self.image:
-            return instance
-        resizedImage = imageResize(Image.open(self.image.path), 50)
-        resizedImage.save(self.image.path, quality=80, optimize=True)
-
-        return instance
+                              related_name='links', default=None, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'вложение'
-        verbose_name_plural = 'вложения'
-        ordering = ['link']
+        verbose_name = 'ссылка'
+        verbose_name_plural = 'ссылки'
+        ordering = ['text']
 
 
-def post_save_image(sender, instance, *args, **kwargs):
-    try:
-        instance.image.delete(save=False)
-    except:
-        pass
+# class PersonPhoto(models.Model):
+#     image = models.ImageField('Фото', upload_to='attachmentImage')
+#     event = models.ForeignKey(Event, on_delete=models.CASCADE,
+#                               related_name='photos', default=None, blank=True, null=True)
+
+#     def save(self, *args, **kwargs):
+#         instance = super(PersonPhoto, self).save(*args, **kwargs)
+#         if not self.image:
+#             return instance
+#         resizedImage = imageResize(Image.open(self.image.path), 50)
+#         resizedImage.save(self.image.path, quality=80, optimize=True)
+
+#         return instance
+
+#     class Meta:
+#         verbose_name = 'фото участника'
+#         verbose_name_plural = 'фото участников'
 
 
-def pre_save_image(sender, instance, *args, **kwargs):
-    try:
-        old_img = instance.__class__.objects.get(id=instance.id).image.path
-        try:
-            new_img = instance.image.path
-        except:
-            new_img = None
-        if new_img != old_img:
-            import os
-            if os.path.exists(old_img):
-                os.remove(old_img)
-    except:
-        pass
+# class Attachment(models.Model):
+#     image = models.ImageField('Иконка', upload_to='attachmentImage')
+#     link = models.CharField('Ссылка', max_length=2048)
+#     event = models.ForeignKey(Event, on_delete=models.CASCADE,
+#                               related_name='attachments', default=None, blank=True, null=True)
+
+#     def save(self, *args, **kwargs):
+#         instance = super(Attachment, self).save(*args, **kwargs)
+#         if not self.image:
+#             return instance
+#         resizedImage = imageResize(Image.open(self.image.path), 50)
+#         resizedImage.save(self.image.path, quality=80, optimize=True)
+
+#         return instance
+
+#     class Meta:
+#         verbose_name = 'вложение'
+#         verbose_name_plural = 'вложения'
+#         ordering = ['link']
 
 
-post_delete.connect(post_save_image, sender=PersonPhoto)
-pre_save.connect(pre_save_image, sender=PersonPhoto)
-post_delete.connect(post_save_image, sender=Attachment)
-pre_save.connect(pre_save_image, sender=Attachment)
-post_delete.connect(post_save_image, sender=Mainevent)
-pre_save.connect(pre_save_image, sender=Mainevent)
+# def post_save_image(sender, instance, *args, **kwargs):
+#     try:
+#         instance.image.delete(save=False)
+#     except:
+#         pass
+
+
+# def pre_save_image(sender, instance, *args, **kwargs):
+#     try:
+#         old_img = instance.__class__.objects.get(id=instance.id).image.path
+#         try:
+#             new_img = instance.image.path
+#         except:
+#             new_img = None
+#         if new_img != old_img:
+#             import os
+#             if os.path.exists(old_img):
+#                 os.remove(old_img)
+#     except:
+#         pass
+
+
+# post_delete.connect(post_save_image, sender=PersonPhoto)
+# pre_save.connect(pre_save_image, sender=PersonPhoto)
+# post_delete.connect(post_save_image, sender=Attachment)
+# pre_save.connect(pre_save_image, sender=Attachment)
+# post_delete.connect(post_save_image, sender=Mainevent)
+# pre_save.connect(pre_save_image, sender=Mainevent)

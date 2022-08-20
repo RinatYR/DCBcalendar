@@ -16,7 +16,6 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
   description,
   action_link,
   action_text,
-  // @ts-ignore
   observeTime,
 }) => {
   const renderDate = () => (
