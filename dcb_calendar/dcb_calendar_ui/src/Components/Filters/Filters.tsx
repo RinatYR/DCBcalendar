@@ -24,17 +24,22 @@ export const Filters: React.FC = () => {
 
   const renderCategories = (categoryList) => (
     <ul className={style.filtersList}>
-      {categoryList.map((category) => {
+      {categoryList.map(({id, name, color}) => {
+        const colorWithHash = color ? '#'+color : "#33bbaf";
         return (
-          <li className={style.filtersItem} key={'subcategory'+category.id}>
+          <li className={style.filtersItem} key={"subcategory" + id}>
             <label>
               <input
                 className={style.filterCheckbox}
                 type="checkbox"
-                onChange={handleCheckFilter(category.id)}
-                checked={filter.includes(category.id)}
+                onChange={handleCheckFilter(id)}
+                checked={filter.includes(id)}
               />
-              <span>{category.name}</span>
+              <div
+                className={style.filterFakeCheckbox}
+                style={{ backgroundColor: colorWithHash, borderColor: colorWithHash }}
+              />
+              <span className={style.filterCheckboxName}>{name}</span>
             </label>
           </li>
         );
@@ -43,14 +48,19 @@ export const Filters: React.FC = () => {
   );
 
   return (
-    <div className={style.filters}>
-      {filtersList.map((category) => (
-        <div key={'category'+category.id}>
-          <h3 className={style.filtersTitle}>{category.name}</h3>
-          {renderCategories(category.subcategories)}
-        </div>
-      ))}
-      <button className={style.filtersButton} onClick={handleResetFilter}>Сбросить</button>
+    <div>
+      <p className={style.filterName}>Фильтры</p>
+      <div className={style.filters}>
+        {filtersList.map((category) => (
+          <div key={"category" + category.id}>
+            <h3 className={style.filtersTitle}>{category.name}</h3>
+            {renderCategories(category.subcategories)}
+          </div>
+        ))}
+        <button className={style.filtersButton} onClick={handleResetFilter}>
+          Очистить фильтры
+        </button>
+      </div>
     </div>
   );
 };

@@ -70,7 +70,7 @@ export const EventsList: React.FC = () => {
     let isExpected = false;
     const weekFormater = Intl.DateTimeFormat("ru-RU", { weekday: "long" });
 
-    return eventsList.map(({ date, id, ...event }) => {
+    return eventsList.map(({ date, id, category, ...event }) => {
       const parseDate = new Date(date);
 
       let status = isExpected ? EEventStatus.EXPECTED : EEventStatus.EXPIRED;
@@ -97,6 +97,7 @@ export const EventsList: React.FC = () => {
           date={eventDate}
           status={status}
           key={"event" + id}
+          color={category[0]?.color}
           observeTime={observeTime}
         />
       );

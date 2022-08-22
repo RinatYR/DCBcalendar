@@ -1,3 +1,4 @@
+from unicodedata import category
 from rest_framework import serializers
 from .models import Category, Event, Links, Mainevent, Subcategory
 
@@ -18,21 +19,20 @@ class LinkSerializer(serializers.ModelSerializer):
         model = Links
         fields = "__all__"
 
+class SubcategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subcategory
+        fields = "__all__"
+
 class EventSerializer(serializers.ModelSerializer):
     links = LinkSerializer(many=True)
+    category = SubcategorySerializer(many=True)
     # attachments = AttachmentSerializer(many=True)
     # photos = PersonPhotoSerializer(many=True)
 
     class Meta:
         model = Event
         fields = "__all__"
-
-
-class SubcategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subcategory
-        fields = "__all__"
-
 
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = SubcategorySerializer(many=True)

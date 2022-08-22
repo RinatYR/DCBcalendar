@@ -1,10 +1,16 @@
+import { ISubcategory } from "../Filters/FiltersModels";
+
 export interface IEvent {
   id: number;
-  action_link: string;
-  action_text: string;
+  links: IEventAttachments[];
+  link: string;
   date: string;
+  date_end: string;
   description: string;
   title: string;
+  place: string;
+  format: string;
+  category: ISubcategory[];
 }
 
 export interface IEventDate {
@@ -15,12 +21,19 @@ export interface IEventDate {
 
 export interface IEventAttachments {
   id: number;
-  image: string;
+  text: string;
   link: string;
-}
-
-export interface IEventPhoto {
-  id: number;
-  image: string;
   event: number;
 }
+
+// export interface IEventAttachments {
+//   id: number;
+//   image: string;
+//   link: string;
+// }
+
+// export interface IEventPhoto {
+//   id: number;
+//   image: string;
+//   event: number;
+// }

@@ -33,11 +33,15 @@ class Category(models.Model):
 
 class Subcategory(models.Model):
     name = models.CharField('Название категории', max_length=100)
+    color = models.CharField('Цвет', max_length=6, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL,
                                  related_name='subcategories', default=None, blank=True, null=True, verbose_name='Категория')
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.category or 'Без категории')
+
+    def natural_key(self):
+        return self.color
 
     class Meta:
         verbose_name = 'подкатегория'
@@ -54,7 +58,7 @@ class Event(models.Model):
     format = models.CharField('Формат проведения', max_length=128, default='Онлайн',blank=True)
     # action_text = models.CharField('Текст кнопки', max_length=50, blank=True)
     link = models.CharField('Ссылка', max_length=2048, blank=True)
-    category = models.ManyToManyField(Subcategory, verbose_name='Фильтр')
+    category = models.ManyToManyField(Subcategory, verbose_name='Фильтр', )
 
     def __str__(self):
         return self.title
