@@ -1,7 +1,6 @@
 import { useEventsActions } from "@/Actions/EventsAction";
 import { usePrevState } from "@/Core/hooks";
 import { EEventStatus } from "@/Enums/Events";
-import { setSelectedDate, setVisibleDates } from "@/ReduxTools/appSlice";
 import { useAppDispatch, useAppSelector } from "@/ReduxTools/hooks";
 import React, { useEffect, useRef, useState } from "react";
 import { EventsItem } from "./EventsItem";

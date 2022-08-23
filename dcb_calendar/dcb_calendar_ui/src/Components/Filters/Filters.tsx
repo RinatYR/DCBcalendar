@@ -3,6 +3,7 @@ import { resetFilter, toggleFilter } from "@/ReduxTools/filtersSlice";
 import { useAppDispatch, useAppSelector } from "@/ReduxTools/hooks";
 import React, { useEffect } from "react";
 import style from "./Filters.less";
+import {Calendar} from "@/Components/Calendar/Calendar";
 
 export const Filters: React.FC = () => {
   const filtersList = useAppSelector((state) => state.filters.filtersList);
@@ -51,6 +52,7 @@ export const Filters: React.FC = () => {
     <div>
       <p className={style.filterName}>Фильтры</p>
       <div className={style.filters}>
+        <Calendar />
         {filtersList.map((category) => (
           <div key={"category" + category.id}>
             <h3 className={style.filtersTitle}>{category.name}</h3>
