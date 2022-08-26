@@ -45,7 +45,7 @@ export const EventsList: React.FC = () => {
   /** No events flag */
   const [isNoEventsMore, setIsNoEventsMore] = useState<boolean>(false);
   /** Ref for scroll container */
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLAnchorElement | null>(null);
 
   /** Get events when filter changed */
   useEffect(() => {
@@ -65,6 +65,14 @@ export const EventsList: React.FC = () => {
     }
   }, [selectedDate]);
 
+  useEffect(() => {
+    if(!scrollRef.current) return;
+    scrollRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, [activeEvent])
+
   const renderList = () => {
     let isExpected = false;
     const weekFormater = Intl.DateTimeFormat("ru-RU", { weekday: "long" });
@@ -76,6 +84,7 @@ export const EventsList: React.FC = () => {
       if (!isExpected && Date.now() <= +parseDate) {
         isExpected = true;
         status = activeEvent ? EEventStatus.EXPECTED : EEventStatus.ACTIVE;
+        !activeEvent && setActiveEvent(id)
       }
       status = activeEvent === id ? EEventStatus.ACTIVE : status;
 
@@ -98,6 +107,7 @@ export const EventsList: React.FC = () => {
           key={"event" + id}
           color={category[0]?.color}
           observeTime={observeTime}
+          setRef={(ref) => scrollRef.current = ref}
         />
       );
     });
@@ -105,7 +115,7 @@ export const EventsList: React.FC = () => {
 
   return (
     <div className={style.eventListWrap}>
-      <div className={style.eventList} ref={scrollRef.current}>
+      <div className={style.eventList} ref={scrollRef}>
         {renderList()}
         <div className={style.eventListGetMore}>
           {isLoading && <div className={style.eventListLoader}>Загрузка</div>}

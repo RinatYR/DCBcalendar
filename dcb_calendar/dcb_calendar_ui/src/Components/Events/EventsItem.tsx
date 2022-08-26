@@ -1,5 +1,5 @@
 import { EEventStatus } from "@/Enums/Events";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import style from "./EventsItem.less";
 import { IEvent, IEventDate } from "./EventsModels";
 
@@ -8,6 +8,7 @@ interface IEventsItemProps extends Omit<IEvent, "date" | "id" | "category"> {
   status: EEventStatus;
   observeTime: string;
   color: string | undefined;
+  setRef: (ref: HTMLAnchorElement | null) => void;
 }
 
 export const EventsItem: React.FC<IEventsItemProps> = ({
@@ -20,8 +21,16 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
   place,
   format,
   color,
+  setRef,
   observeTime,
 }) => {
+  /** Ref for scrolling */
+  const scrollRef = useRef<HTMLAnchorElement | null>(null);
+
+  useEffect(() => {
+    status === EEventStatus.ACTIVE && setRef(scrollRef.current);
+  }, [status]);
+
   const renderDate = () => (
     <div className={style.eventDate}>
       <div className={style.eventDay}>
@@ -33,17 +42,23 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
 
   return (
     <a
-      className={`${style.event} ${status === EEventStatus.ACTIVE && style.eventActive}  ${
-        status === EEventStatus.EXPECTED && style.eventExpected
-      }`}
+      className={`${style.event} ${
+        status === EEventStatus.ACTIVE && style.eventActive
+      }  ${status === EEventStatus.EXPECTED && style.eventExpected}`}
       onClick={(e) => !link && e.preventDefault()}
       style={{ cursor: link ? "pointer" : "default" }}
       href={link}
+      ref={scrollRef}
     >
-      <div className={style.eventLine} style={{ background: color ? '#'+color : "#33bbaf" }} />
+      <div
+        className={style.eventLine}
+        style={{ background: color ? "#" + color : "#33bbaf" }}
+      />
       {renderDate()}
       <div className={style.eventBody}>
-        <p className={style.eventDescription}>{place} • {format}</p>
+        <p className={style.eventDescription}>
+          {place} • {format}
+        </p>
         <h3 className={style.eventTitle}>{title}</h3>
         <p className={style.eventDescription}>{description}</p>
         <div className={style.eventActions}>

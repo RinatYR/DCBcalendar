@@ -33,7 +33,7 @@ export const Calendar: React.FC<ICalendarProps> = () => {
   };
 
   const handleMoveToRight = (): void => {
-    setViewMonth((prev) => (prev < monthList.length - 1 ? prev + 1 : prev));
+    setViewMonth((prev) => (prev < monthList.length ? prev + 1 : prev));
   };
 
   const transformStyleBody = useMemo(

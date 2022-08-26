@@ -1,6 +1,7 @@
 import React from "react";
 import { useMemo } from "react";
 import style from "./Month.less";
+import {useAppDispatch} from "@/ReduxTools/hooks";
 
 /**
  * Month props
@@ -26,6 +27,12 @@ interface IDay {
  */
 export const Month: React.FC<IMonthProps> = React.memo(
   ({ name, dayNum, dayOfWeekStart, daysInPreviousMonth, selectedDay }) => {
+      /** Dispatch from redux */
+      const appDispatch = useAppDispatch();
+
+      const handleDateChange = (date) => () => {
+
+      }
     const renderWeekName = () => (
       <div className={`${style.monthBody} ${style.monthDayOfWeek}`}>
         <span className={style.monthDay}>пн</span>
@@ -79,7 +86,7 @@ export const Month: React.FC<IMonthProps> = React.memo(
         {renderWeekName()}
         <div className={style.monthBody}>
           {days.map((day, idx) => (
-            <div key={`${idx}-${day.num}`} className={day.className}>
+            <div key={`${idx}-${day.num}`} className={day.className} onClick={handleDateChange(date)}>
               <span>{day.num}</span>
             </div>
           ))}

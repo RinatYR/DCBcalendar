@@ -29,7 +29,7 @@ export const Filters: React.FC = () => {
         const colorWithHash = color ? '#'+color : "#33bbaf";
         return (
           <li className={style.filtersItem} key={"subcategory" + id}>
-            <label>
+            <label className={style.filtersLabel}>
               <input
                 className={style.filterCheckbox}
                 type="checkbox"
@@ -53,12 +53,16 @@ export const Filters: React.FC = () => {
       <p className={style.filterName}>Фильтры</p>
       <div className={style.filters}>
         <Calendar />
+        <div className={style.filtersWrap}>
+          <div className={style.filtersTrack}>
         {filtersList.map((category) => (
           <div key={"category" + category.id}>
             <h3 className={style.filtersTitle}>{category.name}</h3>
             {renderCategories(category.subcategories)}
           </div>
         ))}
+          </div>
+        </div>
         <button className={style.filtersButton} onClick={handleResetFilter}>
           Очистить фильтры
         </button>
