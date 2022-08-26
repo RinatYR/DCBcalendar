@@ -1,6 +1,5 @@
 import moment from "moment";
 import React from "react";
-import { Calendar } from "./Components/Calendar/Calendar";
 import { EventsList } from "./Components/Events/EventsList";
 import { Header } from "./Components/Header/Header";
 import style from "./App.less";

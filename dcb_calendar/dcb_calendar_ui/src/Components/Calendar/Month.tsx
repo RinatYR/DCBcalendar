@@ -1,31 +1,38 @@
 import React from "react";
+import { useMemo } from "react";
 import style from "./Month.less";
+import {useAppDispatch} from "@/ReduxTools/hooks";
 
+/**
+ * Month props
+ */
 interface IMonthProps {
   name: string;
   dayNum: number;
   dayOfWeekStart: number;
-  highlightDayStart?: number;
-  highlightDayEnd?: number;
+  daysInPreviousMonth: number;
   selectedDay?: number;
-  secondaryDayNum?: number;
 }
 
+/**
+ * Day interface
+ */
 interface IDay {
-  num?: number;
+  num: number;
   className: string;
 }
 
+/**
+ * Month component
+ */
 export const Month: React.FC<IMonthProps> = React.memo(
-  ({
-    name,
-    dayNum,
-    dayOfWeekStart,
-    highlightDayStart,
-    highlightDayEnd,
-    selectedDay,
-    secondaryDayNum,
-  }) => {
+  ({ name, dayNum, dayOfWeekStart, daysInPreviousMonth, selectedDay }) => {
+      /** Dispatch from redux */
+      const appDispatch = useAppDispatch();
+
+      const handleDateChange = (date) => () => {
+
+      }
     const renderWeekName = () => (
       <div className={`${style.monthBody} ${style.monthDayOfWeek}`}>
         <span className={style.monthDay}>пн</span>
@@ -40,51 +47,46 @@ export const Month: React.FC<IMonthProps> = React.memo(
 
     const renderHeader = () => <div className={style.monthHeader}>{name}</div>;
 
-    const getDays = (): IDay[] => {
+    const days = useMemo<IDay[]>(() => {
+      /** Create month days  */
       const days: IDay[] = [];
-      const previousDays: IDay[] = [];
-      const nextDays: IDay[] = [];
-
       for (let i = 0; i < dayNum; i++) {
         const num = i + 1;
-        const highlight =
-          highlightDayStart &&
-          highlightDayEnd &&
-          highlightDayStart <= num &&
-          num <= highlightDayEnd;
         const className = `${style.monthDay} ${
           selectedDay === num && style.monthDaySelected
-        } ${highlight && style.monthDayHighlight} ${
-          highlightDayStart === num && style.monthDayHighlightFirst
-        } ${highlightDayEnd === num && style.monthDayHighlightLast}`;
+        }`;
         days.push({ num, className });
       }
+
+      /** Create days before month days  */
+      const beforeDays: IDay[] = [];
       for (let i = dayOfWeekStart; i > 0; i--) {
-        const secondaryDay: IDay = {
+        beforeDays.push({
+          num: daysInPreviousMonth - i + 1,
           className: `${style.monthDay} ${style.monthDaySecondary}`,
-        };
-        if (secondaryDayNum) secondaryDay.num = secondaryDayNum - i + 1;
-        previousDays.push(secondaryDay);
-      }
-      const nextDaysNum = (7 - ((dayOfWeekStart + dayNum) % 7)) % 7;
-      for (let i = 1; i <= nextDaysNum; i++) {
-        const secondaryDay: IDay = {
-          className: `${style.monthDay} ${style.monthDaySecondary}`,
-        };
-        if (!secondaryDayNum) secondaryDay.num = i;
-        nextDays.push(secondaryDay);
+        });
       }
 
-      return [...previousDays, ...days, ...nextDays];
-    };
+      /** Create days after month days */
+      const afterDays: IDay[] = [];
+      const afterDaysNum = (7 - ((dayOfWeekStart + dayNum) % 7)) % 7;
+      for (let num = 1; num <= afterDaysNum; num++) {
+        afterDays.push({
+          num,
+          className: `${style.monthDay} ${style.monthDaySecondary}`,
+        });
+      }
+
+      return [...beforeDays, ...days, ...afterDays];
+    }, [dayNum, dayOfWeekStart, daysInPreviousMonth, selectedDay]);
 
     return (
       <div className={style.month}>
         {renderHeader()}
         {renderWeekName()}
         <div className={style.monthBody}>
-          {getDays().map((day, idx) => (
-            <div key={`${idx}-${day.num}`} className={day.className}>
+          {days.map((day, idx) => (
+            <div key={`${idx}-${day.num}`} className={day.className} onClick={handleDateChange(date)}>
               <span>{day.num}</span>
             </div>
           ))}
