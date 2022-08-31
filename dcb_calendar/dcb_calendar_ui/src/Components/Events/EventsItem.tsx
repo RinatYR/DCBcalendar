@@ -6,7 +6,7 @@ import { IEvent, IEventDate } from "./EventsModels";
 interface IEventsItemProps extends Omit<IEvent, "date" | "id" | "category"> {
   date: IEventDate;
   status: EEventStatus;
-  observeTime: string;
+  isSelected: boolean;
   color: string | undefined;
   setRef: (ref: HTMLDivElement | null) => void;
 }
@@ -22,13 +22,13 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
   format,
   color,
   setRef,
-  observeTime,
+  isSelected,
 }) => {
   /** Ref for scrolling */
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    status === EEventStatus.ACTIVE && setRef(scrollRef.current);
+    isSelected && setRef(scrollRef.current);
   }, [status]);
 
   const renderDate = () => (
@@ -42,8 +42,8 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
 
   return (
     <div
-      className={`${style.event} ${status === EEventStatus.ACTIVE && style.eventActive}  ${
-        status === EEventStatus.EXPECTED && style.eventExpected
+      className={`${style.event} ${isSelected && style.eventActive}  ${
+        status === EEventStatus.EXPIRED && style.eventExpired
       }`}
       onClick={() => link && window.open(link)}
       style={{ cursor: link ? "pointer" : "default" }}

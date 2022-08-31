@@ -37,6 +37,7 @@
   font-size: 15px;
   font-weight: 450;
   color: #505050;
+  cursor: default;
 
   &:not(:nth-child(7n)) {
     margin-right: 7px;
@@ -102,5 +103,18 @@
   color: #e0e0e0;
 }
 .month-day-with-events {
-  background-color: gray;
+  color: #21a19a;
+  position: relative;
+  cursor: pointer;
+  &::before {
+    content: "";
+    background-color: #21a19a;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
+  }
 }

@@ -26,11 +26,16 @@
 }
 
 .event-active {
-  background: #c2ebe7;
+  .event-line {
+    box-shadow: 0 -200px 100px -100px transition inset;
+    animation: selected 3s ease;
+  }
 }
 
-.event-expected {
-  background: #eef6f7;
+.event-expired {
+  .event-line {
+    background-color: #d0d7dd !important;
+  }
 }
 
 .event-date {
@@ -107,4 +112,19 @@
 .event:hover .event-link path {
   fill: @color-sky-2;
   transition: all 0.4s ease;
+}
+
+
+@-webkit-keyframes selected {
+  0% {box-shadow: 0 -200px 100px -100px transition inset;}
+  30% {box-shadow: 0 -200px 100px -120px #C81DCE inset;}
+  60% {box-shadow: 0 -200px 100px -100px #31C2A7 inset;}
+  100% {box-shadow: 0 -200px 100px -100px transition inset;}
+}
+
+@keyframes selected {
+  0% {box-shadow: 0 -200px 100px -100px transition inset;}
+  30% {box-shadow: 0 -200px 100px -120px #C81DCE inset;}
+  60% {box-shadow: 0 -200px 100px -100px #31C2A7 inset;}
+  100% {box-shadow: 0 -200px 100px -100px transition inset;}
 }

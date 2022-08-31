@@ -12,7 +12,7 @@ export const Calendar: React.FC<ICalendarProps> = () => {
   const [viewMonth, setViewMonth] = useState<number>(
     () => new Date().getMonth() + 1
   );
-  const [year, setYear] = useState<number | number[]>(() =>
+  const [year] = useState<number | number[]>(() =>
     new Date().getFullYear()
   );
   /** Filter state */

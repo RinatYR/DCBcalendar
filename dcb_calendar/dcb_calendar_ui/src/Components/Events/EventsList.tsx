@@ -90,16 +90,17 @@ export const EventsList: React.FC = () => {
       const parseDate = new Date(date);
 
       let status = isExpected ? EEventStatus.EXPECTED : EEventStatus.EXPIRED;
+      const isSelected = activeEvent === id;
       if (!isExpected && Date.now() <= +parseDate) {
         isExpected = true;
-        status = activeEvent ? EEventStatus.EXPECTED : EEventStatus.ACTIVE;
+        status = EEventStatus.EXPECTED;
         !activeEvent && setActiveEvent(id);
       }
-      status = activeEvent === id ? EEventStatus.ACTIVE : status;
 
       const day = parseDate.getDate();
       const month = monthList[parseDate.getMonth()] || "";
-      const monthName = monthNameFormater.format(parseDate) + parseDate.getFullYear();
+      const monthName =
+        monthNameFormater.format(parseDate) + parseDate.getFullYear();
       const dayWeek = weekFormater.format(parseDate);
       const eventDate: IEventDate = {
         day: day.toString(),
@@ -107,13 +108,16 @@ export const EventsList: React.FC = () => {
         dayWeek,
       };
 
-      const observeTime = parseDate.toISOString();
-
-      if (!Array.isArray(eventsByMonth[monthName])) eventsByMonth[monthName] = [];
+      if (!Array.isArray(eventsByMonth[monthName]))
+        eventsByMonth[monthName] = [];
       eventsByMonth[monthName]?.push(
         <div key={"eventWrap" + id}>
-          {status === EEventStatus.ACTIVE && (
-            <div className={style.eventScroller} key="eventScroller" ref={scrollRef}></div>
+          {isSelected && (
+            <div
+              className={style.eventScroller}
+              key="eventScroller"
+              ref={scrollRef}
+            />
           )}
           <EventsItem
             {...event}
@@ -121,7 +125,7 @@ export const EventsList: React.FC = () => {
             status={status}
             key={"event" + id}
             color={category[0]?.color}
-            observeTime={observeTime}
+            isSelected={isSelected}
             setRef={() => {}}
           />
         </div>
@@ -142,7 +146,9 @@ export const EventsList: React.FC = () => {
         {renderList()}
         <div className={style.eventListGetMore}>
           {isLoading && <div className={style.eventListLoader}>Загрузка</div>}
-          {isNoEventsMore && <div className={style.eventListEmpty}>Событий больше нет</div>}
+          {isNoEventsMore && (
+            <div className={style.eventListEmpty}>Событий больше нет</div>
+          )}
         </div>
       </div>
     </div>

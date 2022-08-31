@@ -11,19 +11,26 @@
 }
 
 .header-button {
+  cursor: pointer;
   background: @color-malachite-2;
   font-weight: 500;
   font-size: 15px;
   line-height: 20px;
   text-align: center;
   color: @color-snowy-1;
-  border: none;
+  border: 1px solid @color-malachite-2;
   padding: 6px 16px;
   border-radius: 26px;
   margin: 0 8px;
+  transition: all 0.3s ease;
+  &:hover {
+    background: @color-snowy-1;
+    color: @color-malachite-2;
+  }
 }
 
 .header-button-white {
+  cursor: pointer;
   box-sizing: border-box;
   background: @color-snowy-1;
   font-weight: 500;
@@ -31,9 +38,14 @@
   line-height: 20px;
   text-align: center;
   color: @color-graphite-1;
-  border: none;
   padding: 6px 16px;
   border-radius: 26px;
   border: 1px solid @color-asphalt-3;
   margin: 0 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: @color-malachite-2;
+    border-color: @color-malachite-2;
+  }
 }
