@@ -8,7 +8,7 @@ interface IEventsItemProps extends Omit<IEvent, "date" | "id" | "category"> {
   status: EEventStatus;
   observeTime: string;
   color: string | undefined;
-  setRef: (ref: HTMLAnchorElement | null) => void;
+  setRef: (ref: HTMLDivElement | null) => void;
 }
 
 export const EventsItem: React.FC<IEventsItemProps> = ({
@@ -25,14 +25,14 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
   observeTime,
 }) => {
   /** Ref for scrolling */
-  const scrollRef = useRef<HTMLAnchorElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     status === EEventStatus.ACTIVE && setRef(scrollRef.current);
   }, [status]);
 
   const renderDate = () => (
-    <div className={style.eventDate}>
+    <div className={style.eventDate} key="eventDate">
       <div className={style.eventDay}>
         {date.day} {date.month}
       </div>
@@ -41,21 +41,21 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
   );
 
   return (
-    <a
-      className={`${style.event} ${
-        status === EEventStatus.ACTIVE && style.eventActive
-      }  ${status === EEventStatus.EXPECTED && style.eventExpected}`}
-      onClick={(e) => !link && e.preventDefault()}
+    <div
+      className={`${style.event} ${status === EEventStatus.ACTIVE && style.eventActive}  ${
+        status === EEventStatus.EXPECTED && style.eventExpected
+      }`}
+      onClick={() => link && window.open(link)}
       style={{ cursor: link ? "pointer" : "default" }}
-      href={link}
       ref={scrollRef}
     >
       <div
         className={style.eventLine}
         style={{ background: color ? "#" + color : "#33bbaf" }}
+        key="eventLine"
       />
       {renderDate()}
-      <div className={style.eventBody}>
+      <div className={style.eventBody} key="eventBody">
         <p className={style.eventDescription}>
           {place} • {format}
         </p>
@@ -63,14 +63,20 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
         <p className={style.eventDescription}>{description}</p>
         <div className={style.eventActions}>
           {links?.map((link) => (
-            <a className={style.eventAction} href={link.link}>
+            <a
+              className={style.eventAction}
+              onClick={(e) => e.stopPropagation()}
+              href={link.link}
+              key={link.id}
+              target="_blank"
+            >
               {link.text}
             </a>
           ))}
         </div>
       </div>
 
-      <div className={style.eventLink}>
+      <div className={style.eventLink} key="eventLink">
         {link && (
           <svg
             width="18"
@@ -90,6 +96,6 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
           </svg>
         )}
       </div>
-    </a>
+    </div>
   );
 };

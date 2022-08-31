@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import appSlice from "./appSlice";
+import calendarSlice from "./calendarSlice";
 import eventsSlice from "./eventsSlice";
 import filtersSlice from "./filtersSlice";
 
@@ -8,5 +9,6 @@ export const store = configureStore({
     app: appSlice,
     events: eventsSlice,
     filters: filtersSlice,
+    calendar: calendarSlice,
   },
 });

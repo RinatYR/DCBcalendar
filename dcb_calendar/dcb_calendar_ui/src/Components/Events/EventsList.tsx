@@ -1,7 +1,7 @@
 import { useEventsActions } from "@/Actions/EventsAction";
 import { usePrevState } from "@/Core/hooks";
 import { EEventStatus } from "@/Enums/Events";
-import { useAppDispatch, useAppSelector } from "@/ReduxTools/hooks";
+import { useAppSelector } from "@/ReduxTools/hooks";
 import React, { useEffect, useRef, useState } from "react";
 import { EventsItem } from "./EventsItem";
 import style from "./EventsList.less";
@@ -34,8 +34,6 @@ export const EventsList: React.FC = () => {
   const selectedDate = useAppSelector((state) => state.app.selectedDate);
   /** Use previous state for selectedDate */
   const prevSelectedDate = usePrevState(selectedDate);
-  /** Dispatch from redux */
-  const appDispatch = useAppDispatch();
   /** Event list Actions */
   const { getEventsList } = useEventsActions();
   /** Highlight event state */
@@ -45,7 +43,7 @@ export const EventsList: React.FC = () => {
   /** No events flag */
   const [isNoEventsMore, setIsNoEventsMore] = useState<boolean>(false);
   /** Ref for scroll container */
-  const scrollRef = useRef<HTMLAnchorElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   /** Get events when filter changed */
   useEffect(() => {
@@ -60,36 +58,48 @@ export const EventsList: React.FC = () => {
 
   /** Scroll to event when selected day changed */
   useEffect(() => {
-    if(selectedDate !== prevSelectedDate) {
-      //Find element and scroll to it
+    if (selectedDate !== prevSelectedDate) {
+      eventsList.some((event) => {
+        const parseDate = new Date(event.date);
+        const stringDate = `${parseDate.getFullYear()}.${
+          parseDate.getMonth() + 1
+        }.${parseDate.getDate()}`;
+        if (selectedDate === stringDate) {
+          setActiveEvent(event.id);
+          return true;
+        }
+        return false;
+      });
     }
   }, [selectedDate]);
 
   useEffect(() => {
-    if(!scrollRef.current) return;
+    if (!scrollRef.current) return;
     scrollRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: "start"
+      block: "start",
     });
-  }, [activeEvent])
+  }, [activeEvent]);
 
   const renderList = () => {
     let isExpected = false;
     const weekFormater = Intl.DateTimeFormat("ru-RU", { weekday: "long" });
-
-    return eventsList.map(({ date, id, category, ...event }) => {
+    const monthNameFormater = Intl.DateTimeFormat("ru-RU", { month: "long" });
+    const eventsByMonth: Record<string, JSX.Element[]> = {};
+    eventsList.forEach(({ date, id, category, ...event }) => {
       const parseDate = new Date(date);
 
       let status = isExpected ? EEventStatus.EXPECTED : EEventStatus.EXPIRED;
       if (!isExpected && Date.now() <= +parseDate) {
         isExpected = true;
         status = activeEvent ? EEventStatus.EXPECTED : EEventStatus.ACTIVE;
-        !activeEvent && setActiveEvent(id)
+        !activeEvent && setActiveEvent(id);
       }
       status = activeEvent === id ? EEventStatus.ACTIVE : status;
 
       const day = parseDate.getDate();
       const month = monthList[parseDate.getMonth()] || "";
+      const monthName = monthNameFormater.format(parseDate) + parseDate.getFullYear();
       const dayWeek = weekFormater.format(parseDate);
       const eventDate: IEventDate = {
         day: day.toString(),
@@ -99,18 +109,31 @@ export const EventsList: React.FC = () => {
 
       const observeTime = parseDate.toISOString();
 
-      return (
-        <EventsItem
-          {...event}
-          date={eventDate}
-          status={status}
-          key={"event" + id}
-          color={category[0]?.color}
-          observeTime={observeTime}
-          setRef={(ref) => scrollRef.current = ref}
-        />
+      if (!Array.isArray(eventsByMonth[monthName])) eventsByMonth[monthName] = [];
+      eventsByMonth[monthName]?.push(
+        <div key={"eventWrap" + id}>
+          {status === EEventStatus.ACTIVE && (
+            <div className={style.eventScroller} key="eventScroller" ref={scrollRef}></div>
+          )}
+          <EventsItem
+            {...event}
+            date={eventDate}
+            status={status}
+            key={"event" + id}
+            color={category[0]?.color}
+            observeTime={observeTime}
+            setRef={() => {}}
+          />
+        </div>
       );
     });
+
+    return Object.keys(eventsByMonth).map((monthName) => (
+      <div key={monthName}>
+        <div className={style.monthName}>{monthName.replace(/\d/g, "")}</div>
+        {eventsByMonth[monthName]}
+      </div>
+    ));
   };
 
   return (

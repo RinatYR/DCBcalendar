@@ -9,7 +9,7 @@
   text-align: center;
   font-size: 15px;
   font-weight: 400;
-  color: #1358BF;
+  color: #1358bf;
   margin-bottom: 8px;
 }
 
@@ -21,7 +21,7 @@
 .month-day-of-week {
   & .month-day {
     font-weight: 400;
-    color: #7D838A;
+    color: #7d838a;
     margin-bottom: 0;
   }
 }
@@ -59,7 +59,7 @@
     padding-right: 0;
     border-radius: 0 16px 16px 0;
 
-    &.month-day-selected::before{
+    &.month-day-selected::before {
       width: 100%;
     }
   }
@@ -73,31 +73,34 @@
   }
 }
 
-.month-day-selected {
-  color: #fff;
-  position: relative;
-  &:nth-child(7n) {
-    &::before {
-      width: 100%;
-    }
-  }
-  &::before {
-    z-index: 0;
-    content: "";
-    display: block;
-    position: absolute;
-    width: calc(100% - 7px);
-    height: 100%;
-    left: 0;
-    top: 0;
-    border-radius: 100%;
-    background: #33bbaf;
-  }
-  & span {
-    z-index: 1;
-  }
-}
+// .month-day-selected {
+//   color: #fff;
+//   position: relative;
+//   &:nth-child(7n) {
+//     &::before {
+//       width: 100%;
+//     }
+//   }
+//   &::before {
+//     z-index: 0;
+//     content: "";
+//     display: block;
+//     position: absolute;
+//     width: calc(100% - 7px);
+//     height: 100%;
+//     left: 0;
+//     top: 0;
+//     border-radius: 100%;
+//     background: #33bbaf;
+//   }
+//   & span {
+//     z-index: 1;
+//   }
+// }
 
 .month-day-secondary {
   color: #e0e0e0;
+}
+.month-day-with-events {
+  background-color: gray;
 }

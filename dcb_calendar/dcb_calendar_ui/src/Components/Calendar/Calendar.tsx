@@ -1,6 +1,8 @@
+import { useCalendarActions } from "@/Actions/CalendarAction";
 import { getMonthsByYear } from "@/Core/utils";
 import { IMonth } from "@/Enums/Calendar";
-import React, { useMemo, useState } from "react";
+import { useAppSelector } from "@/ReduxTools/hooks";
+import React, { useEffect, useMemo, useState } from "react";
 import style from "./Calendar.less";
 import { MonthList } from "./MonthList";
 
@@ -13,6 +15,15 @@ export const Calendar: React.FC<ICalendarProps> = () => {
   const [year, setYear] = useState<number | number[]>(() =>
     new Date().getFullYear()
   );
+  /** Filter state */
+  const filter = useAppSelector((state) => state.filters.filter);
+  /** Event list Actions */
+  const { getCalendarInfo } = useCalendarActions();
+
+  /** Get dates when filter changed */
+  useEffect(() => {
+    getCalendarInfo(filter);
+  }, [filter]);
 
   const monthList = useMemo<IMonth[]>(() => {
     if (Array.isArray(year)) {

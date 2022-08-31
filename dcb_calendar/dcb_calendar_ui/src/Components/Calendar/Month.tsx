@@ -1,13 +1,17 @@
 import React from "react";
-import { useMemo } from "react";
 import style from "./Month.less";
-import {useAppDispatch} from "@/ReduxTools/hooks";
+import { useAppDispatch, useAppSelector } from "@/ReduxTools/hooks";
+import { setSelectedDate } from "@/ReduxTools/appSlice";
+import { IDay } from "./CalendarModels";
 
 /**
  * Month props
  */
 interface IMonthProps {
   name: string;
+  month: number;
+  year: number;
+  monthName: string;
   dayNum: number;
   dayOfWeekStart: number;
   daysInPreviousMonth: number;
@@ -15,24 +19,18 @@ interface IMonthProps {
 }
 
 /**
- * Day interface
- */
-interface IDay {
-  num: number;
-  className: string;
-}
-
-/**
  * Month component
  */
 export const Month: React.FC<IMonthProps> = React.memo(
-  ({ name, dayNum, dayOfWeekStart, daysInPreviousMonth, selectedDay }) => {
-      /** Dispatch from redux */
-      const appDispatch = useAppDispatch();
+  ({ name, month, year, monthName, dayNum, dayOfWeekStart, daysInPreviousMonth, selectedDay }) => {
+    /** Dispatch from redux */
+    const appDispatch = useAppDispatch();
+    /** Calendar info state */
+    const calendarInfo = useAppSelector((state) => state.calendar.calendarInfo);
 
-      const handleDateChange = (date) => () => {
-
-      }
+    const handleDateChange = (dayName) => () => {
+      appDispatch(setSelectedDate(dayName));
+    };
     const renderWeekName = () => (
       <div className={`${style.monthBody} ${style.monthDayOfWeek}`}>
         <span className={style.monthDay}>пн</span>
@@ -47,15 +45,15 @@ export const Month: React.FC<IMonthProps> = React.memo(
 
     const renderHeader = () => <div className={style.monthHeader}>{name}</div>;
 
-    const days = useMemo<IDay[]>(() => {
+    const renderDays = () => {
       /** Create month days  */
       const days: IDay[] = [];
       for (let i = 0; i < dayNum; i++) {
         const num = i + 1;
-        const className = `${style.monthDay} ${
-          selectedDay === num && style.monthDaySelected
+        let className = `${style.monthDay} ${selectedDay === num && style.monthDaySelected} ${
+          calendarInfo?.[year]?.[month]?.[num] && style.monthDayWithEvents
         }`;
-        days.push({ num, className });
+        days.push({ num, className, dayName: `${monthName}.${num}` });
       }
 
       /** Create days before month days  */
@@ -78,15 +76,19 @@ export const Month: React.FC<IMonthProps> = React.memo(
       }
 
       return [...beforeDays, ...days, ...afterDays];
-    }, [dayNum, dayOfWeekStart, daysInPreviousMonth, selectedDay]);
+    };
 
     return (
       <div className={style.month}>
         {renderHeader()}
         {renderWeekName()}
         <div className={style.monthBody}>
-          {days.map((day, idx) => (
-            <div key={`${idx}-${day.num}`} className={day.className} onClick={handleDateChange(date)}>
+          {renderDays().map((day, idx) => (
+            <div
+              key={`${idx}-${day.num}`}
+              className={day.className}
+              onClick={handleDateChange(day.dayName)}
+            >
               <span>{day.num}</span>
             </div>
           ))}
