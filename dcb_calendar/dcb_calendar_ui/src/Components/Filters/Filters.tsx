@@ -1,5 +1,5 @@
 import { useFiltersActions } from "@/Actions/FiltersAction";
-import { resetFilter, toggleFilter } from "@/ReduxTools/filtersSlice";
+import { resetCategories, toggleCategories } from "@/ReduxTools/filtersSlice";
 import { useAppDispatch, useAppSelector } from "@/ReduxTools/hooks";
 import React, { useEffect } from "react";
 import style from "./Filters.less";
@@ -7,7 +7,7 @@ import {Calendar} from "@/Components/Calendar/Calendar";
 
 export const Filters: React.FC = () => {
   const filtersList = useAppSelector((state) => state.filters.filtersList);
-  const filter = useAppSelector((state) => state.filters.filter);
+  const filterCategories = useAppSelector((state) => state.filters.filter.categories);
   const appDispatch = useAppDispatch();
   const { getFiltersList } = useFiltersActions();
 
@@ -15,12 +15,12 @@ export const Filters: React.FC = () => {
     getFiltersList();
   }, []);
 
-  const handleCheckFilter = (id: number) => () => {
-    appDispatch(toggleFilter(id));
+  const handleCheckCategory = (id: number) => () => {
+    appDispatch(toggleCategories(id));
   };
 
-  const handleResetFilter = () => {
-    appDispatch(resetFilter());
+  const handleResetCategories = () => {
+    appDispatch(resetCategories());
   };
 
   const renderCategories = (categoryList) => (
@@ -33,8 +33,8 @@ export const Filters: React.FC = () => {
               <input
                 className={style.filterCheckbox}
                 type="checkbox"
-                onChange={handleCheckFilter(id)}
-                checked={filter.includes(id)}
+                onChange={handleCheckCategory(id)}
+                checked={filterCategories.includes(id)}
               />
               <div
                 className={style.filterFakeCheckbox}
@@ -63,7 +63,7 @@ export const Filters: React.FC = () => {
         ))}
           </div>
         </div>
-        <button className={style.filtersButton} onClick={handleResetFilter}>
+        <button className={style.filtersButton} onClick={handleResetCategories}>
           Очистить фильтры
         </button>
       </div>

@@ -3,30 +3,44 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface IFiltersState {
   filtersList: ICategory[];
-  filter: number[];
+  filter: IFilter;
+}
+
+export interface IFilter {
+  categories: number[];
+  search: string;
 }
 
 const initialState: IFiltersState = {
   filtersList: [],
-  filter: [],
+  filter: {
+    categories: [],
+    search: "",
+  },
 };
 
 const filtersSlice = createSlice({
   name: "filters",
   initialState,
   reducers: {
-    toggleFilter(state, action: PayloadAction<number>) {
-      const newFilter = [...state.filter];
-      const idxSelectedFilter = newFilter.indexOf(action.payload);
-      if (idxSelectedFilter < 0) {
-        newFilter.push(action.payload);
-      }else {
-        newFilter.splice(idxSelectedFilter, 1);
-      }
-      state.filter = newFilter;
+    setSearch(state, action: PayloadAction<string>) {
+      state.filter = { categories: state.filter.categories, search: action.payload };
     },
-    resetFilter(state) {
-      state.filter = [];
+    resetSearch(state) {
+      state.filter = { categories: state.filter.categories, search: "" };
+    },
+    toggleCategories(state, action: PayloadAction<number>) {
+      const newCategories = [...state.filter.categories];
+      const idxSelectedFilter = newCategories.indexOf(action.payload);
+      if (idxSelectedFilter < 0) {
+        newCategories.push(action.payload);
+      } else {
+        newCategories.splice(idxSelectedFilter, 1);
+      }
+      state.filter = { categories: newCategories, search: state.filter.search };
+    },
+    resetCategories(state) {
+      state.filter = { categories: [], search: state.filter.search };
     },
     setFiltersList(state, action: PayloadAction<ICategory[]>) {
       state.filtersList = action.payload;
@@ -35,4 +49,10 @@ const filtersSlice = createSlice({
 });
 
 export default filtersSlice.reducer;
-export const { toggleFilter, resetFilter, setFiltersList } = filtersSlice.actions;
+export const {
+  setSearch,
+  resetSearch,
+  toggleCategories,
+  resetCategories,
+  setFiltersList,
+} = filtersSlice.actions;

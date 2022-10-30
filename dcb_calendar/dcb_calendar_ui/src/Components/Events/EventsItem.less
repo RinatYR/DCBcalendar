@@ -99,17 +99,25 @@
 .event-action:hover {
   color: @color-sky-5;
 }
-
-.event-link {
+.event-link-wrap {
   display: flex;
   justify-content: flex-end;
   flex: 1;
+}
+.event-link {
+  display: flex;
+  font-size: 15px;
+  text-decoration: none;
+  color: @color-sky-2;
+}
+.event-link span {
+  margin-right: 12px;
 }
 .event-link path {
   transition: all 0.4s ease;
 }
 
-.event:hover .event-link path {
+.event-link:hover path {
   fill: @color-sky-2;
   transition: all 0.4s ease;
 }

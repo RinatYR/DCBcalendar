@@ -22,6 +22,8 @@ const monthList = [
   "декабря",
 ];
 
+const sevenDaysInMillisecond = 604800000;
+
 /**
  * Event list component
  */
@@ -86,12 +88,14 @@ export const EventsList: React.FC = () => {
     const weekFormater = Intl.DateTimeFormat("ru-RU", { weekday: "long" });
     const monthNameFormater = Intl.DateTimeFormat("ru-RU", { month: "long" });
     const eventsByMonth: Record<string, JSX.Element[]> = {};
+    const dateNow = Date.now();
+
     eventsList.forEach(({ date, id, category, ...event }) => {
       const parseDate = new Date(date);
 
       let status = isExpected ? EEventStatus.EXPECTED : EEventStatus.EXPIRED;
       const isSelected = activeEvent === id;
-      if (!isExpected && Date.now() <= +parseDate) {
+      if (!isExpected && dateNow <= +parseDate) {
         isExpected = true;
         status = EEventStatus.EXPECTED;
         !activeEvent && setActiveEvent(id);
@@ -127,6 +131,7 @@ export const EventsList: React.FC = () => {
             color={category[0]?.color}
             isSelected={isSelected}
             setRef={() => {}}
+            isNew={( (dateNow - sevenDaysInMillisecond) <= +parseDate)}
           />
         </div>
       );
