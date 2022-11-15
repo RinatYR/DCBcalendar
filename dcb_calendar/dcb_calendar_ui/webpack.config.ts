@@ -29,13 +29,13 @@ const config: webpack.Configuration = {
     },
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    devServer: {
-        port: 3003,
-        static: {
-            directory: path.resolve(__dirname, 'out'),
-            publicPath: `/`,
-        },
-    },
+    // devServer: {
+    //     port: 3003,
+    //     static: {
+    //         directory: path.resolve(__dirname, 'out'),
+    //         publicPath: `/`,
+    //     },
+    // },
     plugins: plugins.concat(
         new webpack.ProvidePlugin({
             process: 'process/browser',

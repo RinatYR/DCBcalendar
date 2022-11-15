@@ -1,6 +1,6 @@
 from django.contrib import admin
-
-from .models import Category, Event, Links, Mainevent, Subcategory
+from .forms import ContactForm
+from .models import Category, Event, Links, Mainevent, Subcategory, FormsModel
 
 
 class LinksAdmin(admin.ModelAdmin):
@@ -32,6 +32,11 @@ class EventAdmin(admin.ModelAdmin):
     #     return super().formfield_for_manytomany(db_field, request, **kwargs)
 
 
+class FormsAdmin(admin.ModelAdmin):
+    form = ContactForm
+
+
 admin.site.register(Links, LinksAdmin)
 admin.site.register(Event, EventAdmin)
+admin.site.register(FormsModel, FormsAdmin)
 admin.site.register([Category, Subcategory, Mainevent])

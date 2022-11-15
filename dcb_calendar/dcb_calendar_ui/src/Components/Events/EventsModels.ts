@@ -5,6 +5,7 @@ export interface IEvent {
   links: IEventAttachments[];
   link: string;
   date: string;
+  created_at: string;
   date_end: string;
   description: string;
   title: string;

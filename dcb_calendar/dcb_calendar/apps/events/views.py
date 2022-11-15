@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from .models import Category, Event, Mainevent
+from .forms import ContactForm
 from .serializers import CategorySerializer, EventSerializer, MainEventSerializer
 from django.utils import timezone
 # from rest_framework import PageNumberPagination
@@ -78,3 +79,14 @@ class CategoryAPIView(generics.ListAPIView):
 class MainEventAPIView(generics.ListAPIView):
     queryset = Mainevent.objects.all()
     serializer_class = MainEventSerializer
+
+
+class FormsAPIView(APIView):
+    def post(self, request):
+        form = ContactForm(request.data)
+        print(form.is_valid())
+        if form.is_valid():
+            form.save()
+            return Response('Спасибо за обратную связь, мы свяжемся с вами в ближайшее время!')
+        else:
+            return Response('Данные в форме невалидны, проверьте корректность заполненных полей!', 400)

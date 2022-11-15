@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import style from "./EventsItem.less";
 import { IEvent, IEventDate } from "./EventsModels";
 
-interface IEventsItemProps extends Omit<IEvent, "date" | "id" | "category"> {
+interface IEventsItemProps extends Omit<IEvent, "date" | "id" | "category" | "created_at"> {
   date: IEventDate;
   status: EEventStatus;
   isSelected: boolean;
@@ -39,6 +39,7 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
         {date.day} {date.month}
       </div>
       <div className={style.eventDayWeek}>{date.dayWeek}</div>
+      {isNew && <div className={style.eventLabelNew}>Новое</div>}
     </div>
   );
 
@@ -57,7 +58,6 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
         key="eventLine"
       />
       {renderDate()}
-      <div>{isNew && 'New'}</div>
       <div className={style.eventBody} key="eventBody">
         <p className={style.eventDescription}>
           {place} • {format}
@@ -81,7 +81,7 @@ export const EventsItem: React.FC<IEventsItemProps> = ({
 
       <div className={style.eventLinkWrap} key="eventLink">
         {link && (
-          <a className={style.eventLink} href="{link}">
+          <a className={style.eventLink} href={link} target="_blank">
             <span>{link.replace(/^http.?:\/\/(.*)\/.*/gm, '$1')}</span>
             <svg
               width="18"

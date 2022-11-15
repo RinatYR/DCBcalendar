@@ -1,13 +1,60 @@
+@import "../../Core/styleVariables.less";
+
 .form * {
   font-family: inherit;
 }
 
+.form-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .form {
+  background-color: @color-snowy-1;
+  width: 95%;
   max-width: 360px;
   border: 1px solid #d0d7dd;
   border-radius: 8px;
   font-family: inherit;
   padding: 28px;
+  position: relative;
+}
+.form-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &::after {
+    content: "";
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: @color-asphalt-1;
+    transform: translateY(-1px) rotate(45deg);
+  }
+  &::before {
+    content: "";
+    display: block;
+    height: 2px;
+    width: 100%;
+    background-color: @color-asphalt-1;
+    transform: translateY(1px) rotate(-45deg);
+  }
 }
 .form-title {
   font-weight: 400;
@@ -72,4 +119,12 @@
   border-radius: 26px;
   width: 100%;
   margin-top: 8px;
+}
+.form-success {
+  color: @color-malachite-2;
+  margin: 16px 0;
+}
+.form-error {
+  color: @color-error-default;
+  margin: 16px 0;
 }

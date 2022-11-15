@@ -90,8 +90,9 @@ export const EventsList: React.FC = () => {
     const eventsByMonth: Record<string, JSX.Element[]> = {};
     const dateNow = Date.now();
 
-    eventsList.forEach(({ date, id, category, ...event }) => {
+    eventsList.forEach(({ date, created_at, id, category, ...event }) => {
       const parseDate = new Date(date);
+      const createdDate = new Date(created_at);
 
       let status = isExpected ? EEventStatus.EXPECTED : EEventStatus.EXPIRED;
       const isSelected = activeEvent === id;
@@ -131,7 +132,7 @@ export const EventsList: React.FC = () => {
             color={category[0]?.color}
             isSelected={isSelected}
             setRef={() => {}}
-            isNew={( (dateNow - sevenDaysInMillisecond) <= +parseDate)}
+            isNew={( (dateNow - sevenDaysInMillisecond) <= +createdDate)}
           />
         </div>
       );

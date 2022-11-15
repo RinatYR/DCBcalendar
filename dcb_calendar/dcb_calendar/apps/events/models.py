@@ -50,6 +50,7 @@ class Subcategory(models.Model):
 
 
 class Event(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField('Название события', max_length=128)
     description = models.CharField('Дополнительное описание', max_length=128)
     date = models.DateTimeField('Дата')
@@ -79,6 +80,20 @@ class Links(models.Model):
         verbose_name_plural = 'ссылки'
         ordering = ['text']
 
+
+class FormsModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    title = models.CharField('Вид обратной связи', max_length=128)
+    name = models.CharField('Контакты', max_length=256)
+    email = models.CharField('Почта', max_length=128)
+    description = models.CharField('Описание', max_length=2048)
+
+    def __str__(self):
+        return '%s (%s)' % (self.name, self.title)
+
+    class Meta:
+        verbose_name = 'форма обратной связи'
+        verbose_name_plural = 'формы обратной связи'
 
 # class PersonPhoto(models.Model):
 #     image = models.ImageField('Фото', upload_to='attachmentImage')
