@@ -1,13 +1,23 @@
 @import "../../Core/styleVariables.less";
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   height: @header-height;
   background-color: @color-snowy-1;
   padding: 0 @content-padding;
   box-sizing: border-box;
+
+  @media screen and (max-height: 750px) {
+    height: 70px;
+  }
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  max-width: @container-size-lg;
+  margin: 0 auto;
 }
 
 .header-button {
@@ -48,4 +58,12 @@
     color: @color-malachite-2;
     border-color: @color-malachite-2;
   }
+}
+
+.header-logo{
+  height: 65%;
+}
+
+.header-logo-img{
+  height: 100%;
 }

@@ -1,24 +1,28 @@
-@import '../../Core/styleVariables.less';
+@import "../../Core/styleVariables.less";
 
-.calendar{
-    display: inline-flex;
-    align-items: flex-start;
-    justify-content: space-between;
+.calendar {
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  @media screen and (max-height: 650px) {
+    display: none;
+  }
 }
 
 .calendar-track {
-    position: relative;
-    overflow: hidden;
-    width: @month-size-md;
-    height: @month-size-md;
+  position: relative;
+  overflow: hidden;
+  width: @month-size-md;
+  height: @month-size-md;
 }
 
 .calendar-body {
-    position: absolute;
-    transition: transform 0.3s ease;
-    top: 0;
-    left: 0;
-    // width: @month-size-md * 12 + @month-gap-md * 11;
-    display: flex;
-    justify-content: space-between;
+  position: absolute;
+  transition: transform 0.3s ease;
+  top: 0;
+  left: 0;
+  // width: @month-size-md * 12 + @month-gap-md * 11;
+  display: flex;
+  justify-content: space-between;
 }

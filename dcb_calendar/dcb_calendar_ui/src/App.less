@@ -7,11 +7,15 @@ body {
 }
 
 .container {
-  padding: 30px;
+  padding: @content-padding;
   padding-bottom: 0px;
   display: flex;
   max-width: @container-size-lg;
   margin: auto;
+
+  @media screen and (max-height: 750px) {
+    padding: 12px @content-padding;
+  }
 }
 
 .sidebar {

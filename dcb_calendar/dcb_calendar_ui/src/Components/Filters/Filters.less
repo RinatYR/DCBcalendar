@@ -7,6 +7,10 @@
   box-sizing: border-box;
   min-width: 288px;
   height: calc(100vh - @header-and-gap-2-height);
+
+  @media screen and (max-height: 750px) {
+    height: calc(100vh - 128px);
+  }
 }
 .filter-name {
   font-size: 19px;
@@ -19,6 +23,10 @@
   overflow-y: scroll;
   height: calc(100% - @month-and-button-size-md);
   margin-bottom: 24px;
+
+  @media screen and (max-height: 650px) {
+    height: calc(100% - 64px);
+  }
 
   &::-webkit-scrollbar {
     width: 6px;

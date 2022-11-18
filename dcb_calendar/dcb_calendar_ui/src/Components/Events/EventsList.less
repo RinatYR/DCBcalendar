@@ -5,6 +5,10 @@
   overflow: scroll;
   height: calc(100vh - @header-and-gap-1-height);
   box-sizing: border-box;
+
+  @media screen and (max-height: 750px) {
+    height: calc(100vh - 92px);
+  }
 }
 
 .event-list-wrap {
@@ -40,7 +44,7 @@
   background: @color-body;
   text-transform: capitalize;
 }
-.event-scroller{
+.event-scroller {
   position: relative;
   bottom: 35.5px;
 }
